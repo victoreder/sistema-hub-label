@@ -12842,8 +12842,29 @@
             renderFollowupPassos();
         }
 
-        function montarPayloadFollowupAgente() {
-            return normalizarFollowup(agenteFollowup);
+        async function montarPayloadFollowupAgente() {
+            const base = normalizarFollowup(agenteFollowup);
+            for (let pi = 0; pi < base.passos.length; pi++) {
+                const passoOrig = agenteFollowup.passos[pi];
+                const itens = base.passos[pi].itens || [];
+                for (let ii = 0; ii < itens.length; ii++) {
+                    const item = itens[ii];
+                    if (!item || item.tipo !== 'midia') continue;
+                    const file = passoOrig && passoOrig.itens && passoOrig.itens[ii] && passoOrig.itens[ii]._arquivo;
+                    if (file) {
+                        const uploaded = await uploadArquivoParaWebhookMedia(file);
+                        item.url = uploaded.url;
+                        item.nome = uploaded.name || item.nome;
+                        item.mime = uploaded.type || item.mime;
+                        passoOrig.itens[ii].url = item.url;
+                        delete item._arquivo;
+                    }
+                    if (!item.url || String(item.url).indexOf('blob:') === 0) {
+                        throw new Error('Envie de novo o arquivo de mídia do follow-up e salve o agente.');
+                    }
+                }
+            }
+            return base;
         }
 
         function syncFollowupToggles() {
@@ -17700,7 +17721,7 @@
                     abrirAtendimento: null,
                     notificarHumano: null,
                     requisicaoHTTP: requisicaoHTTP || null,
-                    followup: montarPayloadFollowupAgente()
+                    followup: await montarPayloadFollowupAgente()
                 };
 
                 if (isEditing) {
