@@ -1,0 +1,4 @@
+project_id = "hxumiciyohbianfnzfyk"
+
+[functions.excluir-conta]
+verify_jwt = true

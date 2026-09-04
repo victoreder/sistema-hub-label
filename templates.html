@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates WhatsApp - Disparamator</title>
+    <link rel="icon" type="image/png" href="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/FAVICON.png">
+    <link rel="shortcut icon" type="image/png" href="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/FAVICON.png">
+    <link rel="apple-touch-icon" href="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/FAVICON.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --brand-500: #25d366;
+            --brand-sidebar-bg: color-mix(in srgb, var(--brand-500) 10%, #000000);
+            --brand-sidebar-active: color-mix(in srgb, var(--brand-500) 18%, #000000);
+            --brand-sidebar-hover: color-mix(in srgb, var(--brand-500) 16%, var(--brand-sidebar-bg));
+            --brand-sidebar-divider: color-mix(in srgb, var(--brand-500) 20%, var(--brand-sidebar-bg));
+            --brand-sidebar-muted: color-mix(in srgb, var(--brand-500) 45%, #ffffff);
+            --surface: #fbfcfd;
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.03);
+        }
+        body {
+            background: #f4f4f5;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #18181b;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        body.dark-mode {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #e2e8f0;
+        }
+        .app-layout { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 72px; overflow: hidden; background: #1A202C;
+            transition: width 0.3s ease; position: fixed; top: 0; left: 0;
+            z-index: 1000; display: flex; flex-direction: column; height: 100vh;
+        }
+        .sidebar:hover, .sidebar.sidebar-expanded { width: 250px; }
+        .sidebar-header { padding: 24px 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; min-height: 96px; }
+        .sidebar-logo-link { display: flex; align-items: center; justify-content: center; width: 32px; height: 40px; min-width: 32px; transition: width 0.3s ease; }
+        .sidebar:hover .sidebar-logo-link, .sidebar.sidebar-expanded .sidebar-logo-link, .sidebar.mobile-open .sidebar-logo-link { width: 100%; min-width: 180px; padding: 0 16px; }
+        .sidebar-logo-img { width: 32px; height: 32px; object-fit: contain; }
+        .sidebar-logo-full { display: none; }
+        .sidebar:hover .sidebar-logo-favicon, .sidebar.sidebar-expanded .sidebar-logo-favicon, .sidebar.mobile-open .sidebar-logo-favicon { display: none; }
+        .sidebar:hover .sidebar-logo-full, .sidebar.sidebar-expanded .sidebar-logo-full, .sidebar.mobile-open .sidebar-logo-full { display: block; width: auto; max-width: 100%; height: 45px; }
+        .sidebar-menu { padding: 4px 0; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+        .sidebar-nav-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 4px 16px; }
+        .menu-item {
+            display: flex; align-items: center; justify-content: center; padding: 10px 0; margin: 2px 10px;
+            color: rgba(255,255,255,0.7); text-decoration: none; transition: all 0.2s; white-space: nowrap; border-radius: 16px;
+        }
+        .sidebar:hover .menu-item, .sidebar.sidebar-expanded .menu-item, .sidebar.mobile-open .menu-item { justify-content: flex-start; padding: 10px 12px; }
+        .menu-item:hover { background: rgba(255,255,255,0.08); color: white; }
+        .menu-item.active { background: #2D3748; color: white; }
+        .menu-icon { width: 25px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .menu-icon svg { width: 16px; height: 16px; stroke: currentColor; }
+        .menu-icon .material-symbols-rounded { font-size: 16px; }
+        .menu-text { margin-left: 0; opacity: 0; width: 0; overflow: hidden; transition: opacity 0.3s, margin-left 0.3s; }
+        .sidebar:hover .menu-text, .sidebar.sidebar-expanded .menu-text, .sidebar.mobile-open .menu-text { margin-left: 16px; opacity: 1; width: auto; flex: 1; }
+        .menu-badge-admin { display: none; margin-left: auto; font-size: 0.6rem; padding: 2px 8px; border-radius: 999px; background: #25d366; color: #fff; }
+        .sidebar:hover .menu-badge-admin, .sidebar.sidebar-expanded .menu-badge-admin, .sidebar.mobile-open .menu-badge-admin { display: inline-block; }
+        .version-text { color: #666; font-size: 0.6rem; text-align: center; padding: 8px 20px; opacity: 0; transition: opacity 0.3s; }
+        .sidebar:hover .version-text, .sidebar.sidebar-expanded .version-text { opacity: 1; }
+        .sidebar-footer { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding: 10px 0; }
+        .logout-item { color: #ff6b6b !important; }
+        .logout-item:hover { background: rgba(255,107,107,0.1) !important; }
+        .theme-toggle-item { cursor: default; }
+        .theme-switch { display: none; position: relative; width: 44px; height: 24px; margin-left: auto; }
+        .sidebar:hover .theme-switch, .sidebar.sidebar-expanded .theme-switch, .sidebar.mobile-open .theme-switch { display: inline-block; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .theme-switch .slider { position: absolute; cursor: pointer; inset: 0; background: #444; border-radius: 24px; transition: 0.3s; }
+        .theme-switch .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+        .theme-switch input:checked + .slider { background: #25d366; }
+        .theme-switch input:checked + .slider:before { transform: translateX(20px); }
+        body.light-mode .sidebar { background: var(--brand-sidebar-bg); }
+        body.light-mode .menu-item { color: rgba(255,255,255,0.72); }
+        body.light-mode .menu-item:hover { background: var(--brand-sidebar-hover); color: #fff; }
+        body.light-mode .menu-item.active { background: var(--brand-sidebar-active); color: #fff; }
+        body.light-mode .sidebar-nav-divider { background: var(--brand-sidebar-divider); }
+        body.light-mode .sidebar-footer { border-top-color: var(--brand-sidebar-divider); }
+        body.light-mode .version-text { color: var(--brand-sidebar-muted); }
+        body.dark-mode .menu-item:hover { background: rgba(37,211,102,0.14); color: #25d366; }
+        body.dark-mode .menu-item.active { background: rgba(37,211,102,0.18); color: #25d366; font-weight: 700; }
+
+        .mobile-close-btn { display: none; position: absolute; top: 12px; right: 12px; background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; padding: 4px; border-radius: 8px; z-index: 10; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+        .sidebar-overlay.active { display: block; }
+        .mobile-menu-toggle {
+            display: none; position: fixed; top: 16px; left: 16px; z-index: 998; width: 44px; height: 44px;
+            border-radius: 12px; background: white; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; align-items: center; justify-content: center;
+        }
+        .mobile-menu-toggle svg { width: 20px; height: 20px; color: #334155; }
+        @media (max-width: 768px) {
+            .mobile-menu-toggle { display: flex; }
+            .sidebar { width: 0; }
+            .sidebar.mobile-open { width: 250px; }
+            .sidebar.mobile-open .mobile-close-btn { display: flex; }
+            .main-content { margin-left: 0 !important; padding: 24px 16px !important; }
+            .page-toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar-filters { flex-direction: column; }
+        }
+
+        .main-content { flex: 1; margin-left: 72px; padding: 32px 40px; background: var(--surface); min-height: 100vh; }
+        body.dark-mode .main-content { background: transparent; }
+
+        .page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+        .page-header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.025em; color: #0f172a; margin-bottom: 6px; }
+        .page-header p { color: #64748b; font-size: 0.875rem; font-weight: 500; }
+        body.dark-mode .page-header h1 { color: #f8fafc; }
+        body.dark-mode .page-header p { color: #94a3b8; }
+
+        .btn {
+            padding: 12px 20px; border-radius: 14px; border: none; font-size: 0.875rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+        }
+        .btn-primary { background: #25d366; color: white; box-shadow: 0 4px 16px rgba(37,211,102,0.25); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,211,102,0.35); }
+
+        .content-card {
+            background: white; border-radius: 1.5rem; padding: 24px;
+            box-shadow: var(--shadow-soft); border: 1px solid #f1f5f9;
+        }
+        body.dark-mode .content-card { background: rgba(30,41,59,0.6); border-color: rgba(71,85,105,0.4); }
+
+        .page-toolbar {
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .toolbar-filters { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1; }
+        .filter-field { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
+        .filter-field label { font-size: 0.75rem; font-weight: 700; color: #64748b; }
+        body.dark-mode .filter-field label { color: #94a3b8; }
+        .filter-field input, .filter-field select {
+            padding: 10px 12px; border-radius: 12px; border: 1px solid #e2e8f0;
+            font-family: inherit; font-size: 0.875rem; background: #f8fafc; color: #0f172a;
+        }
+        body.dark-mode .filter-field input, body.dark-mode .filter-field select {
+            background: rgba(15,23,42,0.5); border-color: rgba(71,85,105,0.5); color: #f8fafc;
+        }
+        .filter-field input:focus, .filter-field select:focus {
+            outline: none; border-color: #25d366; box-shadow: 0 0 0 3px rgba(37,211,102,0.12);
+        }
+        .search-field { flex: 1; min-width: 220px; max-width: 320px; }
+
+        .table-wrap { overflow-x: auto; }
+        .templates-table { width: 100%; border-collapse: collapse; }
+        .templates-table th {
+            text-align: left; padding: 12px 16px; font-size: 0.75rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.06em; color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        body.dark-mode .templates-table th { color: #94a3b8; border-bottom-color: rgba(71,85,105,0.45); }
+        .templates-table td {
+            padding: 16px; font-size: 0.875rem; color: #334155;
+            border-bottom: 1px solid #f1f5f9; vertical-align: middle;
+        }
+        body.dark-mode .templates-table td { color: #e2e8f0; border-bottom-color: rgba(71,85,105,0.3); }
+        .templates-table tr:last-child td { border-bottom: none; }
+        .templates-table tbody tr:hover { background: rgba(37,211,102,0.04); }
+        body.dark-mode .templates-table tbody tr:hover { background: rgba(37,211,102,0.06); }
+        .col-actions { width: 56px; text-align: right; }
+
+        .template-name { font-weight: 700; color: #0f172a; word-break: break-word; }
+        body.dark-mode .template-name { color: #f8fafc; }
+        .template-lang { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
+
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+            font-size: 0.75rem; font-weight: 700;
+        }
+        .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .status-badge.approved { background: rgba(37,211,102,0.12); color: #15803d; }
+        .status-badge.pending { background: rgba(251,191,36,0.15); color: #b45309; }
+        .status-badge.rejected { background: rgba(239,68,68,0.12); color: #dc2626; }
+        .status-badge.other { background: rgba(100,116,139,0.12); color: #64748b; }
+        body.dark-mode .status-badge.approved { color: #25d366; }
+        body.dark-mode .status-badge.pending { color: #fbbf24; }
+        body.dark-mode .status-badge.rejected { color: #f87171; }
+        body.dark-mode .status-badge.other { color: #94a3b8; }
+
+        .category-tag {
+            display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700;
+            background: #f1f5f9; color: #475569;
+        }
+        body.dark-mode .category-tag { background: rgba(51,65,85,0.5); color: #cbd5e1; }
+
+        .btn-delete {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 10px; border: none;
+            background: transparent; color: #ef4444; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-delete:hover { background: rgba(239,68,68,0.1); }
+        .btn-delete:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-delete .material-symbols-rounded { font-size: 20px; }
+
+        .empty-state, .loading-state {
+            text-align: center; padding: 48px 24px; color: #64748b; font-size: 0.875rem;
+        }
+        body.dark-mode .empty-state, body.dark-mode .loading-state { color: #94a3b8; }
+        .empty-state .material-symbols-rounded { font-size: 48px; color: #cbd5e1; margin-bottom: 12px; }
+        body.dark-mode .empty-state .material-symbols-rounded { color: #475569; }
+
+        .alert-box {
+            padding: 16px 18px; border-radius: 14px; margin-bottom: 20px; font-size: 0.875rem; font-weight: 500;
+        }
+        .alert-warning { background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.35); color: #b45309; }
+        .alert-error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #dc2626; }
+        body.dark-mode .alert-warning { color: #fbbf24; }
+        body.dark-mode .alert-error { color: #f87171; }
+
+        .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 200100; display: flex; flex-direction: column; gap: 8px; width: min(380px, calc(100vw - 28px)); pointer-events: none; }
+        .toast-notification { pointer-events: auto; padding: 10px 14px; border-radius: 12px; font-size: 13px; display: flex; align-items: center; opacity: 0; transform: translateY(-8px); transition: all 0.22s; background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.09); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .toast-notification.show { opacity: 1; transform: translateY(0); }
+        .toast-notification.success { border-left: 4px solid #34c759; }
+        .toast-notification.error { border-left: 4px solid #ff3b30; }
+        body.dark-mode .toast-notification { background: rgba(44,44,46,0.9); color: #fff; border-color: rgba(255,255,255,0.12); }
+
+        .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/+esm';
+        const SUPABASE_URL = 'https://hxumiciyohbianfnzfyk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4dW1pY2l5b2hiaWFuZm56ZnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcwNjM1MDQsImV4cCI6MjA1MjYzOTUwNH0.6G3OIuVYtgKWqylUn7yzUblIzABvKj4euYBo-aPt5lQ';
+        window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+        });
+    </script>
+</head>
+<body>
+    <script>
+    (function () {
+        var dark = false;
+        try {
+            var s = '; ' + document.cookie;
+            var parts = s.split('; darkMode=');
+            if (parts.length === 2) dark = parts.pop().split(';').shift() === 'true';
+        } catch (e) {}
+        document.body.classList.add(dark ? 'dark-mode' : 'light-mode');
+    })();
+    </script>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileMenu()"></div>
+
+    <div class="app-layout">
+        <div class="sidebar">
+            <button class="mobile-close-btn" id="mobileCloseBtn" onclick="closeMobileMenu()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo-link" onclick="return false;">
+                    <img class="sidebar-logo-img sidebar-logo-favicon" src="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/FAVICON.png" alt="Disparamator">
+                    <img class="sidebar-logo-img sidebar-logo-full" src="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/LOGO%20PRINCIPAL.png" alt="Disparamator" onerror="this.src='https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/FAVICON.png'">
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/dashboard')">
+                    <span class="menu-icon"><span class="material-symbols-rounded" aria-hidden="true">analytics</span></span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="chat" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/chat')">
+                    <span class="menu-icon"><span class="material-symbols-rounded" aria-hidden="true">chat</span></span>
+                    <span class="menu-text">Chat</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="agentes-ia" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/agentes-ia')">
+                    <span class="menu-icon"><span class="material-symbols-rounded" aria-hidden="true">network_intel_node</span></span>
+                    <span class="menu-text">Agentes IA</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="crm" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/crm')">
+                    <span class="menu-icon"><span class="material-symbols-rounded" aria-hidden="true">view_kanban</span></span>
+                    <span class="menu-text">CRM</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="conexoes" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/conexoes')">
+                    <span class="menu-icon"><span class="material-symbols-rounded" aria-hidden="true">qr_code</span></span>
+                    <span class="menu-text">Conexões</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="disparos" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/disparos')">
+                    <span class="menu-icon"><span class="material-symbols-rounded" aria-hidden="true">send</span></span>
+                    <span class="menu-text">Disparos</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="contatos" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/contatos')">
+                    <span class="menu-icon"><span class="material-symbols-rounded" aria-hidden="true">contacts</span></span>
+                    <span class="menu-text">Contatos</span>
+                </a>
+                <div class="sidebar-nav-divider"></div>
+                <a href="#" class="menu-item" data-menu-id="ajuda" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/ajuda')">
+                    <span class="menu-icon"><span class="material-symbols-rounded" aria-hidden="true">help</span></span>
+                    <span class="menu-text">Ajuda</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="configuracoes" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/configuracoes')">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Configurações</span>
+                </a>
+                <a href="#" id="menu-item-admin" class="menu-item menu-item-admin" style="display: none;" onclick="if(typeof navigateToPage==='function'){navigateToPage('https://webhook2.victoreder.com.br/webhook/adminpannel');return false;}">
+                    <span class="menu-icon"><span class="material-symbols-rounded" aria-hidden="true">admin_panel_settings</span></span>
+                    <span class="menu-text">Administração</span>
+                    <span class="menu-badge-admin">Admin</span>
+                </a>
+            </nav>
+            <div class="version-text" id="versaoAtualTexto">Versão atual: -</div>
+            <div class="sidebar-footer">
+                <div class="menu-item theme-toggle-item" onclick="event.stopPropagation();">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text" id="themeToggleText">Modo Escuro</span>
+                    <label class="theme-switch" onclick="event.stopPropagation();">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <a href="#" class="menu-item logout-item" onclick="logout()">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16,17 21,12 16,7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Sair</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1>Templates WhatsApp</h1>
+                    <p>Gerencie os templates da API Oficial vinculados às suas conexões.</p>
+                </div>
+                <a href="#" class="btn btn-primary" id="btnCriarTemplate">
+                    <span class="material-symbols-rounded" style="font-size:18px;">add</span>
+                    Criar template
+                </a>
+            </div>
+
+            <div id="alertConexoes" class="alert-box alert-warning" style="display:none;"></div>
+
+            <div class="content-card" id="contentCard" style="display:none;">
+                <div class="page-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="filter-field">
+                            <label for="conexaoSelect">Conexão</label>
+                            <select id="conexaoSelect"></select>
+                        </div>
+                        <div class="filter-field search-field">
+                            <label for="searchNome">Buscar por nome</label>
+                            <input type="search" id="searchNome" placeholder="Nome do template..." autocomplete="off">
+                        </div>
+                        <div class="filter-field">
+                            <label for="filterCategoria">Categoria</label>
+                            <select id="filterCategoria">
+                                <option value="">Todas</option>
+                                <option value="MARKETING">Marketing</option>
+                                <option value="UTILITY">Utilidade</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loadingState" class="loading-state">Carregando templates...</div>
+                <div id="emptyState" class="empty-state" style="display:none;">
+                    <div><span class="material-symbols-rounded">description</span></div>
+                    <p id="emptyStateText">Nenhum template encontrado.</p>
+                </div>
+                <div class="table-wrap" id="tableWrap" style="display:none;">
+                    <table class="templates-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Status</th>
+                                <th class="col-actions"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="templatesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let statusBloqueado = false;
+        let conexoesApiOficial = [];
+        let templatesAll = [];
+        let excluindoId = null;
+
+        function getCookie(name) {
+            const value = '; ' + document.cookie;
+            const parts = value.split('; ' + name + '=');
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + days * 86400000);
+            document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/;SameSite=Strict';
+        }
+        function navigateToPage(url) { window.location.href = url; }
+
+        function getWebhookBaseUrl() {
+            const origin = window.location.origin;
+            const path = window.location.pathname;
+            if (path === '/webhook' || path.startsWith('/webhook/')) {
+                return origin + '/webhook';
+            }
+            return 'https://webhook2.victoreder.com.br/webhook';
+        }
+
+        function getCriarTemplateUrl() {
+            var cid = document.getElementById('conexaoSelect')?.value;
+            var url = getWebhookBaseUrl() + '/criar-template';
+            if (cid) url += '?conexaoId=' + encodeURIComponent(cid);
+            return url;
+        }
+
+        function showToast(message, type) {
+            if (statusBloqueado) return;
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification ' + (type === 'error' ? 'error' : 'success');
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(function () { toast.classList.add('show'); }, 50);
+            setTimeout(function () {
+                toast.classList.remove('show');
+                setTimeout(function () { toast.remove(); }, 300);
+            }, 5000);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        async function aguardarSupabase(maxTentativas) {
+            maxTentativas = maxTentativas || 50;
+            for (var i = 0; i < maxTentativas; i++) {
+                if (window.supabase) return true;
+                await new Promise(function (r) { setTimeout(r, 100); });
+            }
+            return !!window.supabase;
+        }
+
+        async function obterUserIdComStatus() {
+            if (!window.supabase) return null;
+            var contaId = null;
+            try {
+                const { data: { user }, error: userError } = await window.supabase.auth.getUser();
+                if (!userError && user && user.id) {
+                    const { data: usuarioData, error: usuarioError } = await window.supabase
+                        .from('SAAS_Usuarios')
+                        .select('contaId, SAAS_Contas(status)')
+                        .eq('auth_user_id', user.id)
+                        .maybeSingle();
+                    if (!usuarioError && usuarioData && usuarioData.contaId) {
+                        if (usuarioData.SAAS_Contas && usuarioData.SAAS_Contas.status === false) {
+                            statusBloqueado = true;
+                            logoutAndRedirectAcessoBloqueado();
+                            throw new Error('STATUS_BLOQUEADO');
+                        }
+                        contaId = usuarioData.contaId;
+                        setCookie('userId', contaId, 7);
+                    }
+                }
+            } catch (error) {
+                if (error.message === 'STATUS_BLOQUEADO') throw error;
+                console.error('Erro ao obter usuário:', error);
+            }
+            if (!contaId) {
+                var cookieUserId = getCookie('userId');
+                if (cookieUserId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cookieUserId)) {
+                    contaId = cookieUserId;
+                }
+            }
+            return contaId;
+        }
+
+        function logoutAndRedirectAcessoBloqueado() {
+            document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            sessionStorage.clear();
+            if (window.supabase) window.supabase.auth.signOut().catch(function () {});
+            window.location.replace(getWebhookBaseUrl() + '/acesso-bloqueado');
+        }
+
+        async function checkAuth() {
+            var supabaseOk = await aguardarSupabase();
+            if (!supabaseOk) {
+                showAlert('Não foi possível carregar o Supabase. Recarregue a página.');
+                return null;
+            }
+            const { data: { session }, error: sessionError } = await window.supabase.auth.getSession();
+            if (sessionError || !session || !session.access_token) {
+                window.location.replace(getWebhookBaseUrl() + '/login');
+                return null;
+            }
+            try {
+                var contaId = await obterUserIdComStatus();
+                if (!contaId) {
+                    window.location.replace(getWebhookBaseUrl() + '/login');
+                    return null;
+                }
+                return contaId;
+            } catch (e) {
+                if (e.message === 'STATUS_BLOQUEADO') return null;
+                throw e;
+            }
+        }
+
+        function showAlert(msg) {
+            var el = document.getElementById('alertConexoes');
+            if (!el) return;
+            el.style.display = 'block';
+            el.className = 'alert-box alert-error';
+            el.textContent = msg;
+        }
+
+        async function logout() {
+            document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            sessionStorage.clear();
+            if (window.supabase) await window.supabase.auth.signOut();
+            window.location.href = getWebhookBaseUrl() + '/login';
+        }
+
+        async function carregarVersao() {
+            const el = document.getElementById('versaoAtualTexto');
+            if (!el || !window.supabase) return;
+            try {
+                const { data } = await window.supabase.from('SAAS_Versao').select('versaoAtual').order('ultimaAtualizacao', { ascending: false }).limit(1);
+                if (data?.[0]?.versaoAtual) el.textContent = 'Versão atual: ' + data[0].versaoAtual;
+            } catch (e) {}
+        }
+
+        async function verificarMostrarMenuAdmin() {
+            const el = document.getElementById('menu-item-admin');
+            if (!el || !window.supabase) return;
+            try {
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) return;
+                const { data } = await window.supabase.from('SAAS_Usuarios').select('super_admin').eq('auth_user_id', user.id).limit(1);
+                if (data?.[0]?.super_admin === true) el.style.display = '';
+            } catch (e) {}
+        }
+
+        function formatCategoria(cat) {
+            if (!cat) return '—';
+            var c = String(cat).toUpperCase();
+            if (c === 'MARKETING') return 'Marketing';
+            if (c === 'UTILITY') return 'Utilidade';
+            return cat;
+        }
+
+        function formatStatus(status) {
+            var s = (status || 'PENDING').toUpperCase();
+            var labels = {
+                APPROVED: 'Aprovado',
+                PENDING: 'Em análise',
+                REJECTED: 'Rejeitado',
+                PAUSED: 'Pausado',
+                DISABLED: 'Desabilitado',
+                IN_APPEAL: 'Em recurso',
+                LIMIT_EXCEEDED: 'Limite excedido'
+            };
+            var classes = {
+                APPROVED: 'approved',
+                PENDING: 'pending',
+                REJECTED: 'rejected'
+            };
+            return {
+                label: labels[s] || status || '—',
+                cls: classes[s] || 'other'
+            };
+        }
+
+        async function carregarConexoes(contaId) {
+            const alertEl = document.getElementById('alertConexoes');
+            const contentCard = document.getElementById('contentCard');
+            const select = document.getElementById('conexaoSelect');
+
+            const { data, error } = await window.supabase
+                .from('SAAS_Conexões')
+                .select('id, NomeConexao, Telefone, apiOficial')
+                .eq('contaId', contaId)
+                .eq('apiOficial', true)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            conexoesApiOficial = (data || []).filter(function (c) {
+                return c.apiOficial === true || c.apiOficial === 'true';
+            });
+
+            if (!conexoesApiOficial.length) {
+                alertEl.style.display = 'block';
+                alertEl.className = 'alert-box alert-warning';
+                alertEl.textContent = 'Nenhuma conexão API Oficial encontrada. Conecte um número antes de gerenciar templates.';
+                contentCard.style.display = 'none';
+                return;
+            }
+
+            alertEl.style.display = 'none';
+            contentCard.style.display = 'block';
+
+            select.innerHTML = conexoesApiOficial.map(function (c) {
+                var nome = c.NomeConexao || 'Conexão ' + c.id;
+                var tel = c.Telefone ? ' · ' + c.Telefone : '';
+                return '<option value="' + c.id + '">' + escapeHtml(nome + tel) + '</option>';
+            }).join('');
+
+            var params = new URLSearchParams(window.location.search);
+            var pre = params.get('conexaoId');
+            if (pre && conexoesApiOficial.some(function (c) { return String(c.id) === pre; })) {
+                select.value = pre;
+            }
+        }
+
+        async function carregarTemplates() {
+            var conexaoId = document.getElementById('conexaoSelect').value;
+            if (!conexaoId) return;
+
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('tableWrap').style.display = 'none';
+
+            const { data, error } = await window.supabase
+                .from('SAAS_Templates_Meta')
+                .select('id, nome, idioma, categoria, status, conexaoId, created_at')
+                .eq('conexaoId', conexaoId)
+                .order('created_at', { ascending: false });
+
+            document.getElementById('loadingState').style.display = 'none';
+
+            if (error) {
+                showToast('Erro ao carregar templates: ' + error.message, 'error');
+                templatesAll = [];
+                renderTemplates();
+                return;
+            }
+
+            templatesAll = data || [];
+            renderTemplates();
+        }
+
+        function getTemplatesFiltrados() {
+            var busca = (document.getElementById('searchNome').value || '').trim().toLowerCase();
+            var cat = document.getElementById('filterCategoria').value;
+            return templatesAll.filter(function (t) {
+                if (busca && !(t.nome || '').toLowerCase().includes(busca)) return false;
+                if (cat && String(t.categoria || '').toUpperCase() !== cat) return false;
+                return true;
+            });
+        }
+
+        function renderTemplates() {
+            var lista = getTemplatesFiltrados();
+            var tbody = document.getElementById('templatesBody');
+            var emptyEl = document.getElementById('emptyState');
+            var tableWrap = document.getElementById('tableWrap');
+            var emptyText = document.getElementById('emptyStateText');
+
+            if (!lista.length) {
+                emptyEl.style.display = 'block';
+                tableWrap.style.display = 'none';
+                emptyText.textContent = templatesAll.length
+                    ? 'Nenhum template corresponde aos filtros.'
+                    : 'Nenhum template cadastrado para esta conexão.';
+                tbody.innerHTML = '';
+                return;
+            }
+
+            emptyEl.style.display = 'none';
+            tableWrap.style.display = 'block';
+
+            tbody.innerHTML = lista.map(function (t) {
+                var st = formatStatus(t.status);
+                var deleting = excluindoId === t.id;
+                return '<tr data-id="' + t.id + '">' +
+                    '<td><div class="template-name">' + escapeHtml(t.nome) + '</div>' +
+                    (t.idioma ? '<div class="template-lang">' + escapeHtml(t.idioma) + '</div>' : '') +
+                    '</td>' +
+                    '<td><span class="category-tag">' + escapeHtml(formatCategoria(t.categoria)) + '</span></td>' +
+                    '<td><span class="status-badge ' + st.cls + '">' + escapeHtml(st.label) + '</span></td>' +
+                    '<td class="col-actions">' +
+                    '<button type="button" class="btn-delete" title="Excluir template" data-id="' + t.id + '" data-conexao="' + t.conexaoId + '" data-nome="' + escapeHtml(t.nome) + '"' + (deleting ? ' disabled' : '') + '>' +
+                    (deleting ? '<span class="spinner" style="border-color:rgba(239,68,68,0.3);border-top-color:#ef4444;width:16px;height:16px;"></span>' :
+                    '<span class="material-symbols-rounded">delete</span>') +
+                    '</button></td></tr>';
+            }).join('');
+
+            tbody.querySelectorAll('.btn-delete').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    excluirTemplate(parseInt(btn.dataset.id, 10), parseInt(btn.dataset.conexao, 10), btn.dataset.nome);
+                });
+            });
+        }
+
+        async function excluirTemplate(templateId, conexaoId, nome) {
+            if (excluindoId) return;
+            var msg = 'Excluir o template "' + nome + '"? Esta ação remove o template na Meta e no sistema.';
+            if (!confirm(msg)) return;
+
+            excluindoId = templateId;
+            renderTemplates();
+
+            try {
+                var url = getWebhookBaseUrl() + '/meta-excluir-template';
+                var res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ conexaoId: conexaoId, templateId: templateId })
+                });
+                var data = await res.json().catch(function () { return {}; });
+
+                if (!res.ok || data.ok === false) {
+                    var errMsg = data.error_user_msg || data.message || data.error || 'Falha ao excluir template';
+                    throw new Error(errMsg);
+                }
+
+                showToast('Template excluído com sucesso', 'success');
+                templatesAll = templatesAll.filter(function (t) { return t.id !== templateId; });
+                excluindoId = null;
+                renderTemplates();
+            } catch (err) {
+                excluindoId = null;
+                renderTemplates();
+                showToast(err.message || 'Erro ao excluir template', 'error');
+            }
+        }
+
+        function initEventos() {
+            document.getElementById('btnCriarTemplate').addEventListener('click', function (e) {
+                e.preventDefault();
+                navigateToPage(getCriarTemplateUrl());
+            });
+
+            document.getElementById('conexaoSelect').addEventListener('change', function () {
+                var url = new URL(window.location.href);
+                url.searchParams.set('conexaoId', this.value);
+                window.history.replaceState({}, '', url);
+                carregarTemplates();
+            });
+
+            document.getElementById('searchNome').addEventListener('input', renderTemplates);
+            document.getElementById('filterCategoria').addEventListener('change', renderTemplates);
+        }
+
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar.classList.contains('mobile-open')) closeMobileMenu();
+            else {
+                sidebar.classList.add('mobile-open');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeMobileMenu() {
+            document.querySelector('.sidebar')?.classList.remove('mobile-open');
+            document.getElementById('sidebarOverlay')?.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function initDarkMode() {
+            const isDark = getCookie('darkMode') === 'true';
+            applyTheme(isDark);
+            const toggle = document.getElementById('darkModeToggle');
+            if (toggle) {
+                toggle.checked = isDark;
+                toggle.addEventListener('change', function () {
+                    applyTheme(this.checked);
+                    setCookie('darkMode', this.checked ? 'true' : 'false', 365);
+                });
+            }
+        }
+        function applyTheme(isDark) {
+            const themeText = document.getElementById('themeToggleText');
+            if (isDark) {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                if (themeText) themeText.textContent = 'Modo Escuro';
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                if (themeText) themeText.textContent = 'Modo Claro';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                initDarkMode();
+                initEventos();
+                carregarVersao();
+                verificarMostrarMenuAdmin();
+
+                const contaId = await checkAuth();
+                if (!contaId) return;
+
+                await carregarConexoes(contaId);
+                if (conexoesApiOficial.length) {
+                    await carregarTemplates();
+                }
+            } catch (err) {
+                console.error('Erro ao inicializar:', err);
+                showAlert('Erro ao carregar a página: ' + (err.message || 'tente recarregar'));
+            }
+        });
+    </script>
+</body>
+</html>

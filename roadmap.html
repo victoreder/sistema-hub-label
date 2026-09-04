@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap de Atualizações</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f3f6fb;
+            --surface: #ffffff;
+            --text: #101828;
+            --muted: #475467;
+            --brand: #25d366;
+            --brand-soft: rgba(37, 211, 102, 0.14);
+            --border: #e4e7ec;
+            --shadow: 0 12px 32px rgba(16, 24, 40, 0.08);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top right, #e9fff1 0%, var(--bg) 42%, var(--bg) 100%);
+            color: var(--text);
+            padding: 36px 20px 48px;
+        }
+
+        .container {
+            max-width: 1020px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1fa855 0%, #25d366 100%);
+            color: #fff;
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+        }
+
+        .header h1 {
+            font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.92;
+            max-width: 740px;
+            line-height: 1.5;
+        }
+
+        .hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.26);
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .roadmap {
+            position: relative;
+            padding-left: 26px;
+            margin-top: 22px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .roadmap::before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(to bottom, #93c5fd, #cbd5e1);
+        }
+
+        .item {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: 0 4px 14px rgba(16, 24, 40, 0.06);
+        }
+
+        .item::before {
+            content: "";
+            position: absolute;
+            left: -24px;
+            top: 26px;
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            background: var(--brand);
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 3px var(--brand-soft);
+        }
+
+        .item-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .item h2 {
+            font-size: 1.05rem;
+            line-height: 1.35;
+        }
+
+        .deadline {
+            white-space: nowrap;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #13803f;
+            background: var(--brand-soft);
+            padding: 7px 10px;
+            border-radius: 999px;
+        }
+
+        .progress-track {
+            height: 7px;
+            background: #eef2f7;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #25d366 0%, #17924c 100%);
+        }
+
+        .item ul {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+
+        .item li {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.45;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .item li::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #25d366;
+            position: absolute;
+            left: 0;
+            top: 8px;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 20px 14px 34px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .item-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <h1>Roadmap de Novas Atualizações</h1>
+            <p>Planejamento das próximas entregas com estimativa de prazo para cada funcionalidade.</p>
+            <span class="hint">Prazos estimados em dias corridos</span>
+        </header>
+
+        <section class="roadmap">
+            <article class="item">
+                <div class="item-top">
+                    <h2>Conexão com API Oficial do WhatsApp</h2>
+                    <span class="deadline">30-45 dias</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 35%;"></div>
+                </div>
+                <ul>
+                    <li>Disparos de mensagens sem bloqueio</li>
+                    <li>Disparos com botões</li>
+                    <li>Todos beneficios da API Oficial</li>
+                </ul>
+            </article>
+
+            <article class="item">
+                <div class="item-top">
+                    <h2>Follow-up automático</h2>
+                    <span class="deadline">15-20 dias</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 58%;"></div>
+                </div>
+                <ul>
+                    <li>Clientes que pararam de responder após X horas</li>
+                    <li>Follow up por etiqueta</li>
+                    <li>Follow up por etapa do CRM</li>
+                    <li>Follow up fixo ou personalizado via IA</li>
+                </ul>
+            </article>
+
+            <article class="item">
+                <div class="item-top">
+                    <h2>Agendamentos de mensagens</h2>
+                    <span class="deadline">7-12 dias</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 72%;"></div>
+                </div>
+                <ul>
+                    <li>Mensagens de lembrete</li>
+                    <li>Mensagens de cobrança</li>
+                </ul>
+            </article>
+
+            <article class="item">
+                <div class="item-top">
+                    <h2>Rastreamento de origem de leads</h2>
+                    <span class="deadline">10-15 dias</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 66%;"></div>
+                </div>
+                <ul>
+                    <li>Origem de leads através de palavra-chave</li>
+                    <li>Qual campanha ou plataforma originou o lead</li>
+                </ul>
+            </article>
+
+            <article class="item">
+                <div class="item-top">
+                    <h2>Agendamento de horários nativo no sistema</h2>
+                    <span class="deadline">20-30 dias</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 45%;"></div>
+                </div>
+                <ul>
+                    <li>Criação de agendas</li>
+                    <li>Consulta de horários disponiveis</li>
+                    <li>Reserva de horários para clientes</li>
+                    <li>Remarcar, cancelar reservas</li>
+                    <li>Lembretes automáticos para reservas</li>
+                </ul>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

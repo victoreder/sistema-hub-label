@@ -1,0 +1,29 @@
+# Dependências
+node_modules/
+node_modules */
+.bun
+
+# Ambiente e segredos
+.env
+.env.*
+!.env.example
+credentials.json
+*.pem
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Ferramentas de IA / IDE
+.cursor/
+.claude/
+.lovable/
+AGENTS.md
+CLAUDE.md
+*lovable*
+
+# Build
+dist/
+dist-ssr/
+*.local
+.vite/

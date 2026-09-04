@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Disparo - SaaS WhatsApp</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#25d366', /* Verde Principal */
+                            600: '#059669',
+                            700: '#047857',
+                        },
+                        wa: {
+                            light: '#dcf8c6',
+                            dark: '#075e54'
+                        },
+                        surface: '#fbfcfd'
+                    },
+                    boxShadow: {
+                        'soft': '0 8px 32px rgba(0, 0, 0, 0.03)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #18181b; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+
+        /* Balão do WhatsApp */
+        .wa-bubble {
+            position: relative;
+            background: #dcf8c6;
+            border-radius: 8px;
+            padding: 12px;
+            max-width: 90%;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .wa-bubble::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -8px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid #dcf8c6;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        /* === Dropdowns <select>: fundo branco e texto preto (light e dark) === */
+        body.light-mode select,
+        body.dark-mode select,
+        body:not(.light-mode) select {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select option,
+        body.dark-mode select option,
+        body:not(.light-mode) select option,
+        body.light-mode select optgroup,
+        body.dark-mode select optgroup,
+        body:not(.light-mode) select optgroup {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        body.light-mode select[class],
+        body.dark-mode select[class],
+        body:not(.light-mode) select[class] {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select[class] option,
+        body.dark-mode select[class] option,
+        body:not(.light-mode) select[class] option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="dropdowns-global.css">
+</head>
+<body class="antialiased min-h-screen flex overflow-hidden selection:bg-brand-500 selection:text-white" x-data="{}">
+
+    <!-- ======================================================= -->
+    <!-- BARRA LATERAL (MOCK PARA CONTEXTO)                      -->
+    <!-- ======================================================= -->
+    <aside class="w-20 hover:w-64 group fixed inset-y-0 left-0 bg-white z-40 transition-all duration-300 ease-in-out flex flex-col overflow-hidden shadow-[4px_0_24px_rgba(0,0,0,0.02)] border-r border-slate-100">
+        <div class="h-24 flex items-center px-6 flex-shrink-0 border-b border-slate-50">
+            <div class="flex items-center gap-4 w-full">
+                <div class="w-8 h-8 flex-shrink-0 bg-brand-500 rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-sm">D</div>
+                <span class="font-extrabold text-xl tracking-tight opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Disparamator</span>
+            </div>
+        </div>
+        <nav class="flex-1 py-4 flex flex-col gap-2 px-4 overflow-y-auto no-scrollbar">
+            <button class="text-slate-400 flex items-center px-3 py-3.5 rounded-2xl relative w-full text-left font-medium hover:bg-slate-50 transition-colors">
+                <i class="fa-solid fa-shapes w-6 text-center flex-shrink-0 text-[18px]"></i>
+                <span class="ml-4 opacity-0 group-hover:opacity-100 whitespace-nowrap flex-1">Dashboard User</span>
+            </button>
+            <button class="bg-slate-900 text-white shadow-md flex items-center px-3 py-3.5 rounded-2xl relative w-full text-left font-medium">
+                <i class="fa-regular fa-paper-plane w-6 text-center flex-shrink-0 text-[18px]"></i>
+                <span class="ml-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap flex-1">Disparos</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ======================================================= -->
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL                              -->
+    <!-- ======================================================= -->
+    <main class="ml-20 flex-1 h-screen overflow-y-auto bg-surface relative custom-scroll flex flex-col">
+        
+        <div class="p-8 md:p-10 max-w-[1400px] mx-auto w-full flex-1 flex flex-col">
+            
+            <!-- Breadcrumb & Header -->
+            <div class="mb-8">
+                <div class="flex items-center gap-2 text-xs font-bold text-slate-400 mb-4 uppercase tracking-widest">
+                    <a href="#" class="hover:text-brand-500 transition-colors">Disparos</a>
+                    <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                    <span class="text-brand-500">Detalhes da Campanha</span>
+                </div>
+                
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                    <div>
+                        <div class="flex items-center gap-3 mb-1">
+                            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Promoção de Inverno VIP</h1>
+                            <span class="bg-emerald-50 text-emerald-600 border border-emerald-200 px-3 py-1 rounded-full text-xs font-bold tracking-wider flex items-center gap-1.5 mt-1">
+                                <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span> Em Andamento
+                            </span>
+                        </div>
+                        <p class="text-slate-500 font-medium text-sm">Acompanhe o progresso e as estatísticas em tempo real.</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar
+                        </button>
+                        <button class="bg-amber-50 border border-amber-200 hover:bg-amber-100 text-amber-700 px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-pause"></i> Pausar Envio
+                        </button>
+                        <button class="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-center transition-colors shadow-sm">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- ROW 1: KPIs & BENTO GRID                   -->
+            <!-- ========================================== -->
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                
+                <!-- Progresso (Highlight) -->
+                <div class="bg-slate-900 rounded-3xl p-6 shadow-soft relative overflow-hidden flex flex-col justify-between md:col-span-2 lg:col-span-1">
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-500 rounded-full blur-[60px] opacity-30 pointer-events-none"></div>
+                    <div class="relative z-10">
+                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Progresso do Disparo</h3>
+                        <div class="flex items-baseline gap-2 mb-6">
+                            <span class="text-4xl font-black text-white tracking-tighter">845</span>
+                            <span class="text-sm font-medium text-slate-500">/ 1.200</span>
+                        </div>
+                    </div>
+                    <div class="relative z-10 mt-auto">
+                        <div class="flex justify-between text-xs font-bold text-slate-300 mb-2">
+                            <span>70% Concluído</span>
+                            <span class="text-brand-400">Previsão: 45 min</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                            <div class="bg-brand-500 h-full rounded-full relative">
+                                <div class="absolute inset-0 bg-white/20 animate-[translate-x_2s_linear_infinite]" style="transform: skewX(-20deg);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estatísticas (Entregas e Falhas) -->
+                <div class="bg-white rounded-3xl p-6 shadow-soft border border-slate-100 flex flex-col justify-between">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Taxa de Entrega</h3>
+                    <div class="flex items-center gap-6 mt-auto">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <div class="w-2 h-2 rounded-full bg-brand-500"></div>
+                                <span class="text-xs font-bold text-slate-500">Enviados</span>
+                            </div>
+                            <span class="text-3xl font-black text-slate-900">840</span>
+                        </div>
+                        <div class="w-px h-10 bg-slate-100"></div>
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                                <span class="text-xs font-bold text-slate-500">Falhas</span>
+                            </div>
+                            <span class="text-3xl font-black text-red-500">5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configurações Rápidas (Span 2) -->
+                <div class="bg-white rounded-3xl p-6 shadow-soft border border-slate-100 lg:col-span-2 flex flex-col justify-center">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4"><i class="fa-solid fa-sliders mr-1"></i> Parâmetros da Campanha</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Intervalo</p>
+                            <p class="text-sm font-bold text-slate-700">30 - 60s</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Pausa Segura</p>
+                            <p class="text-sm font-bold text-slate-700">10m a cada 20</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Horário</p>
+                            <p class="text-sm font-bold text-slate-700">08:00 - 18:00</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Conexões</p>
+                            <p class="text-sm font-bold text-slate-700">3 Aparelhos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- ROW 2: GRÁFICOS & PREVIEW                  -->
+            <!-- ========================================== -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                
+                <!-- Gráfico de Disparos por Hora -->
+                <div class="lg:col-span-2 bg-white rounded-3xl p-6 md:p-8 shadow-soft border border-slate-100 flex flex-col">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-area text-slate-300"></i> Rendimento (Envios / Hora)
+                            </h3>
+                        </div>
+                        <div class="flex items-center gap-3 text-[10px] font-bold">
+                            <div class="flex items-center gap-1.5 text-slate-500"><div class="w-2 h-2 rounded-full bg-brand-500"></div> Sucesso</div>
+                            <div class="flex items-center gap-1.5 text-slate-500"><div class="w-2 h-2 rounded-full bg-red-500"></div> Falha</div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Mockup (SVG) -->
+                    <div class="flex-1 w-full min-h-[220px] relative flex items-end">
+                        <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-6">
+                            <div class="border-b border-dashed border-slate-200 w-full h-0 relative"><span class="absolute -left-6 -top-2 text-[10px] font-bold text-slate-400">100</span></div>
+                            <div class="border-b border-dashed border-slate-200 w-full h-0 relative"><span class="absolute -left-6 -top-2 text-[10px] font-bold text-slate-400">50</span></div>
+                            <div class="border-b border-slate-200 w-full h-0 relative"><span class="absolute -left-6 -top-2 text-[10px] font-bold text-slate-400">0</span></div>
+                        </div>
+                        
+                        <div class="absolute bottom-0 left-0 w-full flex justify-between px-6 text-[9px] font-bold text-slate-400 mt-2">
+                            <span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>Agora</span>
+                        </div>
+
+                        <svg viewBox="0 0 1000 200" preserveAspectRatio="none" class="w-full h-full text-brand-500 z-10 pb-6 ml-6 overflow-visible">
+                            <defs>
+                                <linearGradient id="chartArea" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="currentColor" stop-opacity="0.15" />
+                                    <stop offset="100%" stop-color="currentColor" stop-opacity="0.0" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,180 L200,100 L400,60 L600,120 L800,40 L1000,80 L1000,200 L0,200 Z" fill="url(#chartArea)"></path>
+                            <path d="M0,180 L200,100 L400,60 L600,120 L800,40 L1000,80" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <!-- Pontos -->
+                            <circle cx="0" cy="180" r="4" fill="white" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="200" cy="100" r="4" fill="white" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="400" cy="60" r="4" fill="white" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="600" cy="120" r="4" fill="white" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="800" cy="40" r="4" fill="white" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="1000" cy="80" r="4" fill="white" stroke="currentColor" stroke-width="2"/>
+                            
+                            <!-- Falha Spike Mock -->
+                            <path d="M550,200 L600,180 L650,200 Z" fill="#ef4444" opacity="0.5"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Preview da Mensagem (Mockup WhatsApp) -->
+                <div class="bg-white rounded-3xl shadow-soft border border-slate-100 flex flex-col overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                        <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                            <i class="fa-regular fa-comment-dots text-brand-500"></i> Mensagem
+                        </h3>
+                        <span class="bg-white border border-slate-200 text-slate-500 text-[9px] font-bold px-2 py-0.5 rounded-md">Variação 1 de 2</span>
+                    </div>
+                    
+                    <!-- Fundo do Chat Simulando WhatsApp -->
+                    <div class="flex-1 bg-[#e5ddd5] p-6 flex flex-col relative" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');">
+                        
+                        <!-- Bubble Texto -->
+                        <div class="wa-bubble self-end mb-3">
+                            <p class="text-sm text-[#111] leading-relaxed whitespace-pre-wrap">Olá {{nome}}! Tudo bem? Passando para avisar que a nossa promoção de inverno VIP acaba hoje às 23:59. Vai ficar de fora?</p>
+                            <div class="text-right mt-1">
+                                <span class="text-[10px] text-slate-500">10:42</span>
+                                <i class="fa-solid fa-check-double text-[#53bdeb] text-[10px] ml-1"></i>
+                            </div>
+                        </div>
+
+                        <!-- Bubble Imagem (Mock) -->
+                        <div class="wa-bubble self-end p-1">
+                            <div class="bg-slate-200 rounded flex items-center justify-center h-24 w-40 text-slate-400 text-xs font-bold border border-slate-300">
+                                <i class="fa-regular fa-image mr-1"></i> anexo.jpg
+                            </div>
+                            <div class="text-right pr-2 pb-1 mt-1">
+                                <span class="text-[10px] text-slate-500">10:42</span>
+                                <i class="fa-solid fa-check-double text-[#53bdeb] text-[10px] ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- ROW 3: LISTA DE CONTATOS (TABELA)          -->
+            <!-- ========================================== -->
+            <div class="bg-white rounded-3xl shadow-soft border border-slate-100 flex flex-col overflow-hidden mb-12">
+                
+                <!-- Toolbar da Tabela -->
+                <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-50/30">
+                    <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ul text-slate-400"></i> Histórico de Envios
+                    </h3>
+                    
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fa-solid fa-search text-slate-400 text-xs"></i>
+                            </div>
+                            <input type="text" class="bg-white border border-slate-200 text-slate-900 text-xs font-medium w-full pl-9 pr-4 py-2 rounded-lg outline-none focus:border-brand-500 shadow-sm" placeholder="Buscar telefone...">
+                        </div>
+                        
+                        <div class="relative shrink-0">
+                            <select class="appearance-none bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-brand-500 shadow-sm cursor-pointer">
+                                <option>Status: Todos</option>
+                                <option>Enviados</option>
+                                <option>Falhas</option>
+                                <option>Pendentes</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                        </div>
+                        
+                        <button class="bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> Exportar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabela -->
+                <div class="overflow-x-auto custom-scroll">
+                    <table class="w-full text-left border-collapse whitespace-nowrap min-w-[800px]">
+                        <thead>
+                            <tr class="bg-slate-50/50 border-b border-slate-100">
+                                <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400">Contato / Telefone</th>
+                                <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400">Status</th>
+                                <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400">Data / Hora</th>
+                                <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400">Conexão Utilizada</th>
+                                <th class="px-6 py-4 text-[10px] uppercase tracking-widest font-extrabold text-slate-400 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            
+                            <!-- Enviado -->
+                            <tr class="hover:bg-slate-50/80 transition-colors group cursor-default">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-slate-900 text-sm">João Silva</p>
+                                    <p class="text-[11px] font-mono text-slate-500">+55 11 98888-7777</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wide flex items-center w-fit gap-1.5">
+                                        <i class="fa-solid fa-check-double text-emerald-500"></i> Enviado
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs font-bold text-slate-700">Hoje, 10:42</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded border border-slate-200">Suporte 1</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="w-8 h-8 rounded-lg text-slate-400 hover:bg-white hover:shadow-sm hover:text-brand-500 flex items-center justify-center ml-auto transition-all" title="Ver log completo">
+                                        <i class="fa-regular fa-file-lines"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Falha -->
+                            <tr class="hover:bg-slate-50/80 transition-colors group cursor-default bg-red-50/30">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-slate-900 text-sm">Maria Oliveira</p>
+                                    <p class="text-[11px] font-mono text-slate-500">+55 21 97777-6666</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-red-50 text-red-700 border border-red-200 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wide flex items-center w-fit gap-1.5">
+                                        <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Falha
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs font-bold text-slate-700">Hoje, 10:41</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded border border-slate-200">Vendas</span>
+                                </td>
+                                <td class="px-6 py-4 text-right flex justify-end gap-2">
+                                    <button class="bg-white border border-slate-200 text-slate-600 hover:text-slate-900 text-[10px] font-bold px-2 py-1 rounded shadow-sm transition-colors" title="Tentar novamente">
+                                        Reenviar
+                                    </button>
+                                    <button class="w-8 h-8 rounded-lg text-slate-400 hover:bg-white hover:shadow-sm hover:text-red-500 flex items-center justify-center transition-all" title="Ver erro">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Pendente -->
+                            <tr class="hover:bg-slate-50/80 transition-colors group cursor-default">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-slate-900 text-sm">Carlos Santos</p>
+                                    <p class="text-[11px] font-mono text-slate-500">+55 48 96666-5555</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wide flex items-center w-fit gap-1.5">
+                                        <i class="fa-regular fa-clock text-amber-500"></i> Pendente
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs font-medium text-slate-400 italic">A aguardar fila</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs font-medium text-slate-400 italic">-</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="w-8 h-8 rounded-lg text-slate-400 hover:bg-white hover:shadow-sm hover:text-brand-500 flex items-center justify-center ml-auto transition-all">
+                                        <i class="fa-solid fa-ellipsis"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginação -->
+                <div class="p-5 border-t border-slate-100 bg-white flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-500">A mostrar <span class="text-slate-900">1-3</span> de 1.200 contactos</span>
+                    <div class="flex gap-1">
+                        <button class="w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-300 flex items-center justify-center cursor-not-allowed"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+                        <button class="w-8 h-8 rounded-lg border border-brand-500 bg-brand-50 text-brand-600 font-bold text-xs flex items-center justify-center shadow-sm">1</button>
+                        <button class="w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 font-bold text-xs flex items-center justify-center transition-colors">2</button>
+                        <button class="w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 flex items-center justify-center transition-colors"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

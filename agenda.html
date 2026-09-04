@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda</title>
+    <link rel="icon" type="image/png" href="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/FAVICON.png">
+    <link rel="shortcut icon" type="image/png" href="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/FAVICON.png">
+    <link rel="apple-touch-icon" href="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/FAVICON.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    <style>
+        
+        :root {
+            --brand-500: #25d366;
+            --brand-600: color-mix(in srgb, var(--brand-500) 82%, #000000);
+            --brand-sidebar-bg: color-mix(in srgb, var(--brand-500) 10%, #000000);
+            --brand-sidebar-active: color-mix(in srgb, var(--brand-500) 18%, #000000);
+            --brand-sidebar-hover: color-mix(in srgb, var(--brand-500) 16%, var(--brand-sidebar-bg));
+            --brand-sidebar-divider: color-mix(in srgb, var(--brand-500) 20%, var(--brand-sidebar-bg));
+            --brand-sidebar-muted: color-mix(in srgb, var(--brand-500) 45%, #ffffff);
+        }
+.main-content,
+        .admin-main-content,
+        .main-content-wrapper {
+            max-width: none !important;
+            width: 100% !important;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        body.dark-mode { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color: white; }
+        .app-layout { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 72px;
+            overflow: hidden;
+            background: #1A202C;
+            border-right: none;
+            transition: width 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .sidebar.sidebar-expanded { width: 250px; overflow: visible; transition-duration: 0s; }
+        .sidebar-header {
+            padding: 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-height: 96px;
+            border-bottom: none;
+        }
+
+        .sidebar-nav-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 4px 16px;
+            flex-shrink: 0;
+        }
+        .sidebar-logo-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 40px;
+            min-width: 32px;
+            flex-shrink: 0;
+            margin: 0 auto;
+            text-decoration: none;
+            transition: width 0.3s ease, min-width 0.3s ease;
+        }
+
+        .sidebar:hover .sidebar-logo-link,
+        .sidebar.sidebar-expanded .sidebar-logo-link,
+        .sidebar.mobile-open .sidebar-logo-link {
+            width: 100%;
+            min-width: 180px;
+            justify-content: center;
+            padding: 0 16px;
+        }
+
+        .sidebar-logo-img {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            object-fit: contain;
+            transition: width 0.3s ease, height 0.3s ease, opacity 0.2s ease;
+        }
+
+        .sidebar-logo-full {
+            display: none;
+        }
+
+        .sidebar:hover .sidebar-logo-favicon,
+        .sidebar.sidebar-expanded .sidebar-logo-favicon,
+        .sidebar.mobile-open .sidebar-logo-favicon {
+            display: none;
+        }
+
+        .sidebar:hover .sidebar-logo-full,
+        .sidebar.sidebar-expanded .sidebar-logo-full,
+        .sidebar.mobile-open .sidebar-logo-full {
+            display: block;
+            width: auto;
+            max-width: 100%;
+            height: 45px;
+            min-width: 0;
+        }
+        .sidebar-menu { padding: 4px 0; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0; }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            margin: 2px 10px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            white-space: nowrap;
+            border-radius: 16px;
+            text-align: left;
+        }
+        .sidebar:hover .menu-item,
+        .sidebar.sidebar-expanded .menu-item,
+        .sidebar.mobile-open .menu-item {
+            justify-content: flex-start;
+            padding: 10px 12px;
+        }
+        .menu-item:hover { background: rgba(255, 255, 255, 0.08); color: white; }
+        .menu-item.active { background: #2D3748; color: white; border-right: none; }
+        .menu-item-admin { font-weight: 700 !important; }
+        .menu-badge-admin {
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #25d366;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar:hover .menu-badge-admin,
+        .sidebar.sidebar-expanded .menu-badge-admin { opacity: 1; }
+        .menu-icon { width: 25px; text-align: center; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .menu-icon svg { width: 16px; height: 16px; transition: all 0.3s ease; }
+        .menu-item:hover .menu-icon svg { transform: scale(1.1); }
+        .menu-icon .material-symbols-rounded {
+            font-family: 'Material Symbols Rounded', sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            font-weight: normal;
+            font-style: normal;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-feature-settings: 'liga';
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-item:hover .menu-icon .material-symbols-rounded { transform: scale(1.1); }
+        .menu-badge-novidade { margin-left: auto; font-size: 0.6rem; font-weight: 500; padding: 2px 8px; border-radius: 999px; background: #25d366; color: #fff; opacity: 0; transition: opacity 0.3s; }
+        .sidebar:hover .menu-badge-novidade, .sidebar.sidebar-expanded .menu-badge-novidade { opacity: 1; }
+        .menu-text { margin-left: 15px; opacity: 0; transition: opacity 0.3s; }
+        .sidebar:hover .menu-text, .sidebar.sidebar-expanded .menu-text { opacity: 1; }
+        .sidebar-footer { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding: 10px 0; flex-shrink: 0; }
+        .version-text { color: #666; font-size: 0.6rem; text-align: center; padding: 8px 20px; opacity: 0; transition: opacity 0.3s; white-space: nowrap; }
+        .sidebar:hover .version-text, .sidebar.sidebar-expanded .version-text { opacity: 1; }
+        .logout-item { color: #ff6b6b !important; }
+        .logout-item:hover { background: rgba(255,107,107,0.1) !important; color: #ff6b6b !important; }
+        .theme-toggle-item { cursor: default; }
+        .theme-toggle-item:hover {
+            background: transparent !important;
+            color: rgba(255, 255, 255, 0.72) !important;
+        }
+        .theme-switch { position: relative; display: inline-block; width: 44px; height: 24px; margin-left: auto; opacity: 0; transition: opacity 0.3s; }
+        .sidebar:hover .theme-switch, .sidebar.sidebar-expanded .theme-switch { opacity: 1; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .theme-switch .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #444; transition: 0.3s; border-radius: 24px; }
+        .theme-switch .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; transition: 0.3s; border-radius: 50%; }
+        .theme-switch input:checked + .slider { background: #25d366; }
+        .theme-switch input:checked + .slider:before { transform: translateX(20px); }
+        @media (max-height: 800px) {
+            .menu-icon { width: 26px; }
+            .menu-icon svg { width: 18px; height: 18px; }
+            .menu-icon .material-symbols-rounded { font-size: 18px; }
+        }
+        @media (max-height: 700px) {
+            .menu-icon { width: 22px; }
+            .menu-icon svg { width: 16px; height: 16px; }
+            .menu-icon .material-symbols-rounded { font-size: 16px; }
+            .theme-switch { width: 38px; height: 20px; }
+        }
+        @media (max-height: 600px) {
+            .menu-icon { width: 20px; }
+            .menu-icon svg { width: 14px; height: 14px; }
+            .menu-icon .material-symbols-rounded { font-size: 14px; }
+            .theme-switch { width: 34px; height: 18px; }
+        }
+        .main-content-wrapper { flex: 1; padding: 20px; overflow-x: auto; margin-left: 72px; width: 100%; }
+        .container { max-width: none; margin: 0 auto; width: 100%; }
+        .header { text-align: left; margin-bottom: 24px; }
+        .header h1 { font-size: 2.5rem; font-weight: 600; margin-bottom: 10px; color: white; }
+        .header p { color: #888; font-size: 1.1rem; }
+        .form-container { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; backdrop-filter: blur(10px); margin-bottom: 24px; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
+        .form-group label { color: #fff; font-weight: 500; margin-bottom: 8px; font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 12px 15px; color: white; font-size: 0.9rem; outline: none;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #25d366; box-shadow: 0 0 0 2px rgba(37,211,102,0.2); }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #888; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+        .form-row .form-group { flex: 1; min-width: 140px; }
+        .btn { padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: all 0.2s; }
+        .btn-primary { background: #25d366; color: #fff; }
+        .btn-primary:hover { background: var(--brand-600); }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+        .agenda-select-row { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .agenda-select-row select { min-width: 220px; }
+        .dias-checkboxes { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+        .dias-checkboxes label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: normal; margin: 0; }
+        .dias-checkboxes input[type="checkbox"] { width: 18px; height: 18px; accent-color: #25d366; }
+        .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0; }
+        .tab { padding: 12px 20px; background: transparent; color: #888; border: none; cursor: pointer; font-size: 0.95rem; border-bottom: 3px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
+        .tab:hover { color: #25d366; }
+        .tab.active { color: #25d366; border-bottom-color: #25d366; font-weight: 600; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+        .calendar-wrap { max-width: 880px; height: 52vh; max-height: 420px; margin: 0 auto; min-height: 280px; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: minmax(0, 1fr); gap: 4px; height: 100%; }
+        .calendar-header { text-align: center; padding: 4px; font-weight: 600; color: #888; font-size: 0.8rem; min-height: 0; }
+        .calendar-day { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; font-size: clamp(0.75rem, 1.8vw, 0.9rem); transition: all 0.2s; min-height: 0; }
+        .calendar-day:hover { background: rgba(37,211,102,0.2); color: #25d366; }
+        .calendar-day.has-events { border: 1px solid rgba(37,211,102,0.5); }
+        .calendar-day.empty-cell { background: transparent; cursor: default; pointer-events: none; }
+        .calendar-day.empty-cell:hover { background: transparent; color: inherit; }
+        .calendar-day .count { font-size: 0.65rem; color: #25d366; margin-top: 1px; }
+        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .calendar-nav button { padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 8px; cursor: pointer; }
+        .calendar-nav button:hover { background: rgba(37,211,102,0.2); border-color: #25d366; }
+        .calendar-nav span { font-size: 1.1rem; font-weight: 600; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: #888; font-weight: 600; font-size: 0.85rem; }
+        tr:hover { background: rgba(255,255,255,0.03); }
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+        .btn-danger { background: rgba(255,68,68,0.2); color: #ff4444; border: 1px solid rgba(255,68,68,0.4); }
+        .btn-danger:hover { background: rgba(255,68,68,0.3); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .modal h3 { margin-bottom: 20px; font-size: 1.25rem; }
+        .modal .form-group { margin-bottom: 16px; }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
+        .modal.modal-agenda-config { max-width: 520px; }
+        .modal-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0; }
+        .modal-tabs .tab { padding: 10px 16px; background: transparent; color: #888; border: none; cursor: pointer; font-size: 0.9rem; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+        .modal-tabs .tab.active { color: #25d366; border-bottom-color: #25d366; font-weight: 600; }
+        .modal-tab-pane { display: none; }
+        .modal-tab-pane.active { display: block; }
+        .tr-agendamento { cursor: pointer; }
+        body.light-mode .modal-tabs { border-bottom-color: rgba(0,0,0,0.12); }
+        body.light-mode .modal-tabs .tab { color: #666; }
+        body.light-mode .modal-tabs .tab.active { color: #25d366; border-bottom-color: #25d366; }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; pointer-events: none; }
+        .toast-notification { background: rgba(37,211,102,0.1); border: 1px solid rgba(37,211,102,0.3); color: #25d366; padding: 15px 20px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; max-width: 350px; transform: translateX(400px); opacity: 0; transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55); pointer-events: auto; }
+        .toast-notification.show { transform: translateX(0); opacity: 1; }
+        .toast-notification.success { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.3); color: #25d366; }
+        .toast-notification.error { background: rgba(255,68,68,0.1); border-color: rgba(255,68,68,0.3); color: #ff4444; }
+.toast-message { flex: 1; }
+        .placeholder-hint { font-size: 0.8rem; color: #888; margin-top: 4px; }
+        .section-title { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .agenda-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .btn-novo-agendamento { margin-bottom: 16px; }
+        body.light-mode .section-title { color: #1a1a1a; border-color: rgba(0,0,0,0.12); }
+        body.light-mode .agenda-card { background: #fff; border-color: rgba(0,0,0,0.08); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+        .sidebar-overlay.active { display: block; }
+        .mobile-menu-toggle { display: none; position: fixed; top: 16px; right: 16px; z-index: 1001; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px; border-radius: 8px; cursor: pointer; }
+        .status-select { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: inherit; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; }
+        @media (max-width: 768px) {
+            .mobile-menu-toggle { display: block; }
+            .main-content-wrapper { margin-left: 0; padding-top: 60px; }
+            .sidebar { left: -250px; width: 250px; transition: left 0.3s; }
+            .sidebar.mobile-open { left: 0; }
+        }
+        /* ========== Light mode ========== */
+        body.light-mode { background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%); color: #333; }
+        body.light-mode .sidebar {
+            background: var(--brand-sidebar-bg);
+            border-right: none;
+            box-shadow: none;
+        }
+        body.light-mode .sidebar-nav-divider { background: var(--brand-sidebar-divider); }
+        body.light-mode .menu-item {
+            color: rgba(255, 255, 255, 0.72);
+        }
+        body.light-mode .menu-item:hover {
+            background: var(--brand-sidebar-hover);
+            color: #fff;
+        }
+        body.light-mode .menu-item.active {
+            background: var(--brand-sidebar-active);
+            color: #fff;
+        }
+        body.menu-oculta-chat [data-menu-id="chat"] { display: none !important; }
+        body.menu-oculta-agentes-ia [data-menu-id="agentes-ia"] { display: none !important; }
+        body.menu-oculta-crm [data-menu-id="crm"] { display: none !important; }
+        body.menu-oculta-conexoes [data-menu-id="conexoes"] { display: none !important; }
+        body.menu-oculta-disparos [data-menu-id="disparos"] { display: none !important; }
+        body.menu-oculta-contatos [data-menu-id="contatos"] { display: none !important; }
+        body.menu-oculta-listas [data-menu-id="listas"] { display: none !important; }
+        body.menu-oculta-ajuda [data-menu-id="ajuda"] { display: none !important; }
+        body.menu-oculta-configuracoes [data-menu-id="configuracoes"] { display: none !important; }
+        body.light-mode .version-text {
+            color: var(--brand-sidebar-muted);
+        }
+        body.light-mode .sidebar-footer {
+            border-top: 1px solid var(--brand-sidebar-divider);
+        }
+        body.light-mode .theme-switch .slider {
+            background-color: color-mix(in srgb, var(--brand-500) 35%, var(--brand-sidebar-bg));
+        }
+        body.light-mode .theme-switch input:checked + .slider { background: #25d366; }
+        body.light-mode .header h1 { color: #1a1a1a; }
+        body.light-mode .header p { color: #555; }
+        body.light-mode .form-container { background: #fff; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        body.light-mode .form-group label { color: #333; }
+        body.light-mode .form-group input,
+        body.light-mode .form-group select,
+        body.light-mode .form-group textarea { background: #fff; border: 1px solid rgba(0,0,0,0.18); color: #222; }
+        body.light-mode .form-group input::placeholder,
+        body.light-mode .form-group textarea::placeholder { color: #999; }
+        body.light-mode .form-group input:focus,
+        body.light-mode .form-group select:focus,
+        body.light-mode .form-group textarea:focus { border-color: #25d366; box-shadow: 0 0 0 2px rgba(37,211,102,0.18); }
+        body.light-mode .placeholder-hint { color: #777; }
+        body.light-mode .agenda-select-row span[style*="color"] { color: #333 !important; }
+        body.light-mode .btn-secondary { background: #f0f0f0; color: #333; border-color: rgba(0,0,0,0.15); }
+        body.light-mode .btn-secondary:hover { background: #e5e5e5; border-color: rgba(0,0,0,0.2); color: #1a1a1a; }
+        body.light-mode .btn-primary { background: #25d366; color: #fff; }
+        body.light-mode .btn-primary:hover { background: var(--brand-600); }
+        body.light-mode .tabs { border-bottom-color: rgba(0,0,0,0.12); }
+        body.light-mode .tab { color: #666; }
+        body.light-mode .tab:hover { color: #25d366; }
+        body.light-mode .tab.active { color: #25d366; border-bottom-color: #25d366; }
+        body.light-mode .calendar-nav { color: #333; }
+        body.light-mode .calendar-nav button { background: #fff; border: 1px solid rgba(0,0,0,0.18); color: #333; }
+        body.light-mode .calendar-nav button:hover { background: rgba(37,211,102,0.1); border-color: #25d366; color: #25d366; }
+        body.light-mode .calendar-nav span { color: #1a1a1a; }
+        body.light-mode .calendar-header { color: #666; }
+        body.light-mode .calendar-day { background: #fff; border: 1px solid rgba(0,0,0,0.06); color: #333; }
+        body.light-mode .calendar-day:hover { background: rgba(37,211,102,0.12); border-color: rgba(37,211,102,0.4); color: #25d366; }
+        body.light-mode .calendar-day.empty-cell { background: transparent; }
+        body.light-mode .calendar-day.has-events { border-color: rgba(37,211,102,0.5); background: rgba(37,211,102,0.06); }
+        body.light-mode .calendar-day.has-events:hover { background: rgba(37,211,102,0.14); }
+        body.light-mode .calendar-day .count { color: #25d366; }
+        body.light-mode .table-wrap { background: #fff; border-radius: 10px; border: 1px solid rgba(0,0,0,0.08); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        body.light-mode th { color: #555; background: #f8f9f8; border-color: rgba(0,0,0,0.1); }
+        body.light-mode td { color: #333; border-color: rgba(0,0,0,0.08); }
+        body.light-mode tr:hover { background: rgba(37,211,102,0.04); }
+        body.light-mode .status-select { background: #fff; border: 1px solid rgba(0,0,0,0.18); color: #333; }
+        body.light-mode .btn-danger { background: rgba(220,53,69,0.12); color: #c82333; border-color: rgba(220,53,69,0.3); }
+        body.light-mode .btn-danger:hover { background: rgba(220,53,69,0.18); color: #bd2130; }
+        body.light-mode .modal-overlay { background: rgba(0,0,0,0.4); }
+        body.light-mode .modal { background: #fff; border: 1px solid rgba(0,0,0,0.12); box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
+        body.light-mode .modal h3 { color: #1a1a1a; }
+        body.light-mode .modal .form-group label { color: #333; }
+        body.light-mode .modal .form-group input { background: #fff; color: #222; border-color: rgba(0,0,0,0.18); }
+        body.light-mode .mobile-menu-toggle { background: #fff; border-color: rgba(0,0,0,0.15); color: #333; }
+
+        /* === Dropdowns <select>: fundo branco e texto preto (light e dark) === */
+        body.light-mode select,
+        body.dark-mode select,
+        body:not(.light-mode) select {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select option,
+        body.dark-mode select option,
+        body:not(.light-mode) select option,
+        body.light-mode select optgroup,
+        body.dark-mode select optgroup,
+        body:not(.light-mode) select optgroup {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        body.light-mode select[class],
+        body.dark-mode select[class],
+        body:not(.light-mode) select[class] {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        body.light-mode select[class] option,
+        body.dark-mode select[class] option,
+        body:not(.light-mode) select[class] option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+    </style>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/+esm';
+        const SUPABASE_URL = 'https://hxumiciyohbianfnzfyk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4dW1pY2l5b2hiaWFuZm56ZnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcwNjM1MDQsImV4cCI6MjA1MjYzOTUwNH0.6G3OIuVYtgKWqylUn7yzUblIzABvKj4euYBo-aPt5lQ';
+        window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false } });
+        console.log('✅ Supabase inicializado');
+    </script>
+    <style>
+        .toast-container{position:fixed!important;top:max(20px,env(safe-area-inset-top,0px))!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;z-index:200100!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;width:min(380px,calc(100vw - 28px))!important;pointer-events:none!important;box-sizing:border-box!important}
+        .toast-notification{pointer-events:auto!important;margin:0!important;padding:10px 14px 10px 0!important;border-radius:12px!important;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif!important;font-size:13px!important;line-height:1.35!important;letter-spacing:-.01em!important;font-weight:400!important;display:flex!important;align-items:center!important;gap:0!important;opacity:0!important;transform:translateY(-8px) scale(.98)!important;transition:opacity .22s ease,transform .22s ease!important;color:rgba(0,0,0,.88)!important;background:rgba(255,255,255,.76)!important;backdrop-filter:saturate(180%) blur(22px)!important;-webkit-backdrop-filter:saturate(180%) blur(22px)!important;border:1px solid rgba(0,0,0,.09)!important;box-shadow:0 4px 16px rgba(0,0,0,.1),0 0 0 .5px rgba(0,0,0,.04) inset!important;max-width:none!important}
+        .toast-notification.show{opacity:1!important;transform:translateY(0) scale(1)!important}
+        .toast-notification::before{content:''!important;align-self:stretch!important;width:4px!important;min-height:2.5em!important;margin:6px 12px 6px 8px!important;border-radius:3px!important;flex-shrink:0!important;background:rgba(0,122,255,.95)!important}
+        .toast-notification.info::before{background:rgba(0,122,255,.95)!important}.toast-notification.success::before{background:rgba(52,199,89,.95)!important}.toast-notification.error::before{background:rgba(255,59,48,.95)!important}
+        .toast-notification .toast-message{flex:1!important;min-width:0!important;word-break:break-word!important;padding-right:4px!important}
+        body.dark-mode .toast-notification{color:rgba(255,255,255,.92)!important;background:rgba(44,44,46,.78)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 0 .5px rgba(255,255,255,.06) inset!important}
+        body.dark-mode .toast-notification.info::before{background:rgba(10,132,255,.95)!important}body.dark-mode .toast-notification.success::before{background:rgba(48,209,88,.95)!important}body.dark-mode .toast-notification.error::before{background:rgba(255,69,58,.95)!important}
+    </style>
+    <link rel="stylesheet" href="dropdowns-global.css">
+</head>
+<body>
+    <!-- Tema antes da primeira pintura: evita flash claro (cookie darkMode, mesma lógica que getCookie) -->
+    <script>
+    (function () {
+        var dark = false;
+        try {
+            var s = '; ' + document.cookie;
+            var parts = s.split('; darkMode=');
+            if (parts.length === 2) dark = parts.pop().split(';').shift() === 'true';
+        } catch (e) {}
+        document.body.classList.remove('dark-mode', 'light-mode');
+        document.body.classList.add(dark ? 'dark-mode' : 'light-mode');
+    })();
+    </script>
+    <div class="toast-container" id="toastContainer"></div>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileMenu()"></div>
+    <div class="app-layout">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo-link" onclick="return false;">
+                    <img class="sidebar-logo-img sidebar-logo-favicon" src="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/FAVICON.png" alt="Logo">
+                    <img class="sidebar-logo-img sidebar-logo-full" src="https://hxumiciyohbianfnzfyk.supabase.co/storage/v1/object/public/arquivos/LOGO%20PRINCIPAL.png" alt="Logo" onerror="this.style.display='none';">
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item" data-menu-id="dashboard" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/dashboard'); return false;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">analytics</span>
+                    </span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="chat" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/chat'); return false;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">chat</span>
+                    </span>
+                    <span class="menu-text">Chat</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="agentes-ia" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/agentes-ia'); return false;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">network_intel_node</span>
+                    </span>
+                    <span class="menu-text">Agentes IA</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="crm" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/crm'); return false;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">view_kanban</span>
+                    </span>
+                    <span class="menu-text">CRM</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="conexoes" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/conexoes'); return false;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">qr_code</span>
+                    </span>
+                    <span class="menu-text">Conexões</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="disparos" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/disparos'); return false;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">send</span>
+                    </span>
+                    <span class="menu-text">Disparos</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="contatos" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/contatos'); return false;">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">contacts</span>
+                    </span>
+                    <span class="menu-text">Contatos</span>
+                </a>
+                <div class="sidebar-nav-divider"></div>
+                <a href="#" class="menu-item" data-menu-id="ajuda" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/ajuda')">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">help</span>
+                    </span>
+                    <span class="menu-text">Ajuda</span>
+                </a>
+                <a href="#" class="menu-item" data-menu-id="configuracoes" onclick="navigateToPage('https://webhook2.victoreder.com.br/webhook/configuracoes')">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Configurações</span>
+                </a>
+                <a href="#" id="menu-item-admin" class="menu-item menu-item-admin" style="display: none;" onclick="if(typeof navigateToPage==='function'){navigateToPage('https://webhook2.victoreder.com.br/webhook/adminpannel');return false;}">
+                    <span class="menu-icon">
+                        <span class="material-symbols-rounded" aria-hidden="true">admin_panel_settings</span>
+                    </span>
+                    <span class="menu-text">Administração</span>
+                    <span class="menu-badge-admin">Admin</span>
+                </a>
+            </nav>
+            <div class="version-text" id="versaoAtualTexto">Versão atual: -</div>
+            <div class="sidebar-footer">
+                <!-- Dark Mode Toggle -->
+                <div class="menu-item theme-toggle-item" onclick="event.stopPropagation();">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text" id="themeToggleText">Modo Escuro</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="darkModeToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <a href="#" class="menu-item logout-item" onclick="logout()">
+                    <span class="menu-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16,17 21,12 16,7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </span>
+                    <span class="menu-text">Sair</span>
+                </a>
+            </div>
+        </div>
+        <div class="main-content-wrapper">
+            <div class="container">
+                <div class="header">
+                    <h1>Agenda</h1>
+                    <p>Gerencie suas agendas, agendamentos de atendimento e envio de mensagens agendadas</p>
+                </div>
+                <div class="form-container">
+                    <div class="agenda-select-row">
+                        <label class="form-group" style="margin-bottom:0;">
+                            <span style="margin-bottom:8px;display:block;color:#fff;font-weight:500;">Agenda</span>
+                            <select id="agendaSelect">
+                                <option value="">-- Selecione uma agenda --</option>
+                            </select>
+                        </label>
+                        <button type="button" class="btn btn-primary" id="btnNovaAgenda">Nova agenda</button>
+                        <button type="button" class="btn btn-secondary" id="btnEditarAgenda" style="display: none;">Editar agenda</button>
+                    </div>
+                </div>
+                <div id="tabsContent" style="display: none;">
+                    <div class="tabs">
+                        <button type="button" class="tab active" data-tab="calendario">Calendário</button>
+                        <button type="button" class="tab" data-tab="lista">Lista</button>
+                    </div>
+                    <div id="paneCalendario" class="tab-pane active">
+                        <div class="form-container agenda-card">
+                            <button type="button" class="btn btn-primary btn-novo-agendamento" id="btnNovoAgendamentoCal">+ Novo agendamento</button>
+                        </div>
+                        <div class="calendar-nav">
+                            <button type="button" id="calPrev">&larr; Anterior</button>
+                            <span id="calMonthYear"></span>
+                            <button type="button" id="calNext">Próximo &rarr;</button>
+                        </div>
+                        <div class="calendar-wrap">
+                            <div class="calendar-grid" id="calendarGrid"></div>
+                        </div>
+                    </div>
+                    <div id="paneLista" class="tab-pane">
+                        <div class="form-container agenda-card" style="margin-bottom: 16px;">
+                            <button type="button" class="btn btn-primary btn-novo-agendamento" id="btnNovoAgendamentoLista">+ Novo agendamento</button>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>Data/Hora</th><th>Telefone</th><th>Status</th><th>Confirmação enviada</th><th>Ações</th></tr></thead>
+                                <tbody id="listaAgendamentos"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="modalNovaAgenda">
+        <div class="modal modal-agenda-config">
+            <h3 id="modalNovaAgendaTitulo">Nova agenda</h3>
+            <input type="hidden" id="novaAgendaId" value="">
+            <div class="form-group"><label>Nome da agenda *</label><input type="text" id="novaAgendaNome" placeholder="Ex: Consultório" maxlength="200"></div>
+            <div class="form-row">
+                <div class="form-group"><label>Hora início</label><input type="time" id="novaAgendaHoraInicio"></div>
+                <div class="form-group"><label>Hora fim</label><input type="time" id="novaAgendaHoraFim"></div>
+            </div>
+            <div class="form-group">
+                <label>Dias de atendimento</label>
+                <div class="dias-checkboxes" id="novaAgendaDias">
+                    <label><input type="checkbox" name="novaDia" value="1"> Seg</label>
+                    <label><input type="checkbox" name="novaDia" value="2"> Ter</label>
+                    <label><input type="checkbox" name="novaDia" value="3"> Qua</label>
+                    <label><input type="checkbox" name="novaDia" value="4"> Qui</label>
+                    <label><input type="checkbox" name="novaDia" value="5"> Sex</label>
+                    <label><input type="checkbox" name="novaDia" value="6"> Sáb</label>
+                    <label><input type="checkbox" name="novaDia" value="0"> Dom</label>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Duração (min)</label><input type="number" id="novaAgendaDuracao" min="1" placeholder="30"></div>
+                <div class="form-group"><label>Horas antes confirmação</label><input type="number" id="novaAgendaHorasConf" min="0" placeholder="24"></div>
+                <div class="form-group"><label>Conexão</label><select id="novaAgendaIdConexao"><option value="">-- Nenhuma --</option></select></div>
+            </div>
+            <div class="form-group">
+                <label>Template de confirmação</label>
+                <textarea id="novaAgendaTemplate" placeholder="{{nome}}, {{data}}, {{hora}}"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalNovaAgenda()">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnCriarOuSalvarAgenda">Criar agenda</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="modalAgendamento">
+        <div class="modal modal-agendamento-popup">
+            <h3 id="modalAgendamentoTitulo">Novo agendamento</h3>
+            <div class="tabs modal-tabs">
+                <button type="button" class="tab active" data-modal-tab="agendamento">Agendamento</button>
+                <button type="button" class="tab" data-modal-tab="mensagem">Agendar mensagem</button>
+            </div>
+            <div id="modalPaneAgendamento" class="modal-tab-pane active">
+                <input type="hidden" id="modalDataDay">
+                <input type="hidden" id="modalAgendamentoId" value="">
+                <div class="form-group"><label>Data</label><input type="date" id="modalData"></div>
+                <div class="form-group"><label>Hora</label><input type="time" id="modalHora"></div>
+                <div class="form-group"><label>Telefone</label><input type="text" id="modalTelefone" placeholder="5511999999999"></div>
+                <div class="form-group"><label>Observações</label><textarea id="modalObservacoes" placeholder="Opcional"></textarea></div>
+            </div>
+            <div id="modalPaneMensagem" class="modal-tab-pane">
+                <div class="form-group"><label>Telefone</label><input type="text" id="modalMsgTelefone" placeholder="5511999999999"></div>
+                <div class="form-group"><label>Mensagem</label><textarea id="modalMsgMensagem" placeholder="Texto da mensagem"></textarea></div>
+                <div class="form-group"><label>Data e hora</label><input type="datetime-local" id="modalMsgDataHora"></div>
+                <div class="form-group"><label>Conexão</label><select id="modalMsgIdConexao"><option value="">-- Selecione --</option></select></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalAgendamento()">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnSalvarAgendamento">Salvar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const toastContainer = document.getElementById('toastContainer');
+        let statusBloqueado = false;
+        let contaId = null;
+        let agendas = [];
+        let conexoes = [];
+        let currentAgendaId = null;
+        let currentAgendaConfig = null;
+        let calDate = new Date();
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`;
+        }
+        function showToast(message, type = 'info') {
+            if (typeof statusBloqueado !== 'undefined' && statusBloqueado) return;
+            const toastContainer = document.getElementById('toastContainer');
+            if (!toastContainer) return;
+            const cleanMessage = String(message || '').replace(/^(\u2705|\u274C|\u2139\uFE0F?|\u26A0\uFE0F?)\s*/, '');
+            const safeType = type === 'success' || type === 'error' ? type : 'info';
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification ' + safeType;
+            toast.setAttribute('role', safeType === 'error' ? 'alert' : 'status');
+            toast.setAttribute('aria-live', safeType === 'error' ? 'assertive' : 'polite');
+            const messageSpan = document.createElement('span');
+            messageSpan.className = 'toast-message';
+            messageSpan.textContent = cleanMessage;
+            toast.appendChild(messageSpan);
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+        function showSuccess(m) { showToast(m, 'success'); }
+        function showError(m) { if (!statusBloqueado) showToast(m, 'error'); }
+        function showConfirmDialog(message) {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:100000;padding:16px;';
+                const box = document.createElement('div');
+                box.style.cssText = 'width:100%;max-width:460px;background:#fff;border-radius:16px;padding:20px;box-shadow:0 20px 45px rgba(2,6,23,.3);';
+                box.innerHTML = `
+                    <h3 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;">Confirmar ação</h3>
+                    <p style="margin:0 0 18px 0;font-size:14px;line-height:1.6;color:#334155;">${String(message || '').replace(/</g, '&lt;').replace(/\n/g, '<br>')}</p>
+                    <div style="display:flex;justify-content:flex-end;gap:10px;">
+                        <button type="button" data-cancel style="border:1px solid #cbd5e1;background:#fff;color:#334155;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;">Cancelar</button>
+                        <button type="button" data-confirm style="border:0;background:#dc2626;color:#fff;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;">Confirmar</button>
+                    </div>
+                `;
+                overlay.appendChild(box);
+                document.body.appendChild(overlay);
+                const close = (value) => {
+                    overlay.remove();
+                    resolve(value);
+                };
+                overlay.addEventListener('click', (event) => {
+                    if (event.target === overlay) close(false);
+                });
+                box.querySelector('[data-cancel]').addEventListener('click', () => close(false));
+                box.querySelector('[data-confirm]').addEventListener('click', () => close(true));
+            });
+        }
+
+        async function obterUserIdComStatus() {
+            let uid = null;
+            if (window.supabase) {
+                try {
+                    const { data: { user }, error: userError } = await window.supabase.auth.getUser();
+                    if (!userError && user && user.id) {
+                        const { data: usuarioData, error: usuarioError } = await window.supabase.from('SAAS_Usuarios').select('contaId, SAAS_Contas(status)').eq('auth_user_id', user.id).single();
+                        if (!usuarioError && usuarioData && usuarioData.contaId) {
+                            const status = usuarioData?.SAAS_Contas?.status;
+                            if (status === false) { logoutAndRedirectAcessoBloqueado(); throw new Error('STATUS_BLOQUEADO'); }
+                            uid = usuarioData.contaId;
+                            setCookie('userId', uid, 7);
+                        }
+                    }
+                } catch (e) {
+                    if (e.message === 'STATUS_BLOQUEADO') throw e;
+                    console.error(e);
+                }
+            }
+            if (!uid) {
+                const c = getCookie('userId');
+                if (c && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(c)) uid = c;
+            }
+            return uid;
+        }
+        function logoutAndRedirectAcessoBloqueado() {
+            statusBloqueado = true;
+            document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            if (typeof clearMenuOcultarCache === 'function') clearMenuOcultarCache();
+            sessionStorage.clear(); localStorage.clear();
+            window.location.replace('https://webhook2.victoreder.com.br/webhook/acesso-bloqueado');
+            if (window.supabase) window.supabase.auth.signOut().catch(() => {});
+        }
+        function logout() {
+            document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            if (typeof clearMenuOcultarCache === 'function') clearMenuOcultarCache();
+            if (window.supabase) window.supabase.auth.signOut().catch(() => {});
+            window.location.href = 'https://webhook2.victoreder.com.br/webhook/login';
+        }
+        async function navigateToPage(url) {
+            try {
+                if (!window.supabase) { window.location.replace('https://webhook2.victoreder.com.br/webhook/login'); return false; }
+                const { data: { session } } = await window.supabase.auth.getSession();
+                if (!session || !session.access_token) { window.location.replace('https://webhook2.victoreder.com.br/webhook/login'); return false; }
+                const u = await obterUserIdComStatus();
+                if (!u) { window.location.replace('https://webhook2.victoreder.com.br/webhook/login'); return false; }
+            } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return false; throw e; }
+            window.location.href = url; return false;
+        }
+        async function initializeAuth() {
+            if (!window.supabase) { window.location.replace('https://webhook2.victoreder.com.br/webhook/login'); return; }
+            const { data: { session }, error: sessionError } = await window.supabase.auth.getSession();
+            if (sessionError || !session || !session.access_token) { window.location.replace('https://webhook2.victoreder.com.br/webhook/login'); return; }
+            try { contaId = await obterUserIdComStatus(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; throw e; }
+            if (!contaId) { window.location.replace('https://webhook2.victoreder.com.br/webhook/login'); return; }
+        }
+        async function carregarVersao() {
+            const el = document.getElementById('versaoAtualTexto');
+            if (!el || !window.supabase) return;
+            try {
+                const { data, error } = await window.supabase.from('SAAS_Versao').select('versaoAtual').order('ultimaAtualizacao', { ascending: false }).limit(1);
+                if (!error && data && data[0] && data[0].versaoAtual) el.textContent = 'Versao atual: ' + data[0].versaoAtual;
+            } catch (e) { console.warn(e); }
+        }
+        function initDarkMode() {
+            const dark = getCookie('darkMode');
+            const isDark = dark === null || dark === 'true';
+            document.body.classList.toggle('light-mode', !isDark); document.body.classList.toggle('dark-mode', isDark);
+            const t = document.getElementById('themeToggleText'); if (t) t.textContent = isDark ? 'Modo Escuro' : 'Modo Claro';
+            const toggle = document.getElementById('darkModeToggle'); if (toggle) { toggle.checked = isDark; toggle.addEventListener('change', function() { const v = this.checked; document.body.classList.toggle('light-mode', !v); document.body.classList.toggle('dark-mode', v); setCookie('darkMode', v ? 'true' : 'false', 365); const tx = document.getElementById('themeToggleText'); if (tx) tx.textContent = v ? 'Modo Escuro' : 'Modo Claro'; }); }
+        }
+
+        async function loadAgendas() {
+            if (!contaId || !window.supabase) return;
+            const { data, error } = await window.supabase.from('SAAS_Agenda_Config').select('id, nome').eq('contaId', contaId).order('nome');
+            if (error) { showError('Erro ao carregar agendas.'); return; }
+            agendas = data || [];
+            const sel = document.getElementById('agendaSelect');
+            sel.innerHTML = '<option value="">-- Selecione uma agenda --</option>' + agendas.map(a => `<option value="${a.id}">${a.nome || 'Agenda ' + a.id}</option>`).join('');
+            if (currentAgendaId && agendas.some(a => a.id === currentAgendaId)) sel.value = currentAgendaId;
+            else currentAgendaId = null;
+            onAgendaChange();
+        }
+        async function loadConexoes() {
+            if (!contaId || !window.supabase) return;
+            const { data, error } = await window.supabase.from('SAAS_Conexões').select('id, NomeConexao, instanceName').eq('contaId', contaId);
+            if (error) { console.warn(error); return; }
+            conexoes = data || [];
+            const opt = '<option value="">-- Nenhuma --</option>' + (conexoes || []).map(c => `<option value="${c.id}">${c.NomeConexao || c.instanceName || 'Conexao ' + c.id}</option>`).join('');
+            const optMsg = '<option value="">-- Selecione --</option>' + (conexoes || []).map(c => `<option value="${c.id}">${c.NomeConexao || c.instanceName || 'Conexao ' + c.id}</option>`).join('');
+            const novaConex = document.getElementById('novaAgendaIdConexao');
+            if (novaConex) novaConex.innerHTML = opt;
+            const modalMsg = document.getElementById('modalMsgIdConexao');
+            if (modalMsg) modalMsg.innerHTML = optMsg;
+        }
+        function onAgendaChange() {
+            const sel = document.getElementById('agendaSelect');
+            currentAgendaId = sel.value ? parseInt(sel.value, 10) : null;
+            document.getElementById('tabsContent').style.display = currentAgendaId ? 'block' : 'none';
+            const btnEditar = document.getElementById('btnEditarAgenda');
+            if (btnEditar) btnEditar.style.display = currentAgendaId ? 'inline-block' : 'none';
+            if (currentAgendaId) { loadAgendaConfig(); loadAppointments(); renderCalendar(); }
+        }
+        async function loadAgendaConfig() {
+            if (!currentAgendaId || !window.supabase) return;
+            const { data, error } = await window.supabase.from('SAAS_Agenda_Config').select('*').eq('id', currentAgendaId).single();
+            if (error || !data) return;
+            currentAgendaConfig = data;
+        }
+        document.getElementById('agendaSelect').addEventListener('change', onAgendaChange);
+        function preencherModalNovaAgenda(data) {
+            document.getElementById('novaAgendaNome').value = data.nome || '';
+            document.getElementById('novaAgendaHoraInicio').value = data.horaInicio ? String(data.horaInicio).substring(0, 5) : '';
+            document.getElementById('novaAgendaHoraFim').value = data.horaFim ? String(data.horaFim).substring(0, 5) : '';
+            const dias = data.diasAtendimento || [];
+            document.querySelectorAll('#novaAgendaDias input[name="novaDia"]').forEach(cb => { cb.checked = dias.includes(parseInt(cb.value, 10)); });
+            document.getElementById('novaAgendaDuracao').value = data.duracaoMinutos ?? '';
+            document.getElementById('novaAgendaHorasConf').value = data.horasAntesConfirmacao ?? '';
+            document.getElementById('novaAgendaIdConexao').value = data.idConexao ?? '';
+            document.getElementById('novaAgendaTemplate').value = data.templateConfirmacao || '';
+        }
+        function limparModalNovaAgenda() {
+            document.getElementById('novaAgendaId').value = '';
+            document.getElementById('novaAgendaNome').value = '';
+            document.getElementById('novaAgendaHoraInicio').value = '';
+            document.getElementById('novaAgendaHoraFim').value = '';
+            document.querySelectorAll('#novaAgendaDias input[name="novaDia"]').forEach(cb => { cb.checked = false; });
+            document.getElementById('novaAgendaDuracao').value = '';
+            document.getElementById('novaAgendaHorasConf').value = '';
+            document.getElementById('novaAgendaIdConexao').value = '';
+            document.getElementById('novaAgendaTemplate').value = '';
+        }
+        function abrirModalNovaAgenda() {
+            limparModalNovaAgenda();
+            document.getElementById('modalNovaAgendaTitulo').textContent = 'Nova agenda';
+            document.getElementById('btnCriarOuSalvarAgenda').textContent = 'Criar agenda';
+            document.getElementById('modalNovaAgenda').classList.add('active');
+            setTimeout(() => document.getElementById('novaAgendaNome').focus(), 100);
+        }
+        function abrirModalEditarAgenda() {
+            if (!currentAgendaConfig) return;
+            document.getElementById('novaAgendaId').value = currentAgendaId;
+            preencherModalNovaAgenda(currentAgendaConfig);
+            document.getElementById('modalNovaAgendaTitulo').textContent = 'Editar agenda';
+            document.getElementById('btnCriarOuSalvarAgenda').textContent = 'Salvar alterações';
+            document.getElementById('modalNovaAgenda').classList.add('active');
+        }
+        function fecharModalNovaAgenda() {
+            document.getElementById('modalNovaAgenda').classList.remove('active');
+        }
+        document.getElementById('btnNovaAgenda').addEventListener('click', () => {
+            if (!contaId || !window.supabase) return;
+            abrirModalNovaAgenda();
+        });
+        document.getElementById('btnEditarAgenda').addEventListener('click', () => { abrirModalEditarAgenda(); });
+        document.getElementById('btnCriarOuSalvarAgenda').addEventListener('click', async () => {
+            const nome = document.getElementById('novaAgendaNome').value.trim();
+            if (!nome) { showError('Informe o nome da agenda.'); return; }
+            if (!contaId || !window.supabase) return;
+            const dias = [];
+            document.querySelectorAll('#novaAgendaDias input[name="novaDia"]:checked').forEach(cb => dias.push(parseInt(cb.value, 10)));
+            const payload = {
+                nome,
+                horaInicio: document.getElementById('novaAgendaHoraInicio').value || null,
+                horaFim: document.getElementById('novaAgendaHoraFim').value || null,
+                diasAtendimento: dias.length ? dias : null,
+                duracaoMinutos: parseInt(document.getElementById('novaAgendaDuracao').value, 10) || null,
+                horasAntesConfirmacao: parseInt(document.getElementById('novaAgendaHorasConf').value, 10) || null,
+                idConexao: document.getElementById('novaAgendaIdConexao').value ? parseInt(document.getElementById('novaAgendaIdConexao').value, 10) : null,
+                templateConfirmacao: document.getElementById('novaAgendaTemplate').value || null
+            };
+            const editId = document.getElementById('novaAgendaId').value.trim();
+            if (editId) {
+                const { error } = await window.supabase.from('SAAS_Agenda_Config').update(payload).eq('id', parseInt(editId, 10)).eq('contaId', contaId);
+                if (error) { showError('Erro ao salvar.'); return; }
+                fecharModalNovaAgenda();
+                showSuccess('Agenda atualizada.');
+                currentAgendaConfig = { ...currentAgendaConfig, ...payload };
+                loadAgendaConfig();
+            } else {
+                const { data, error } = await window.supabase.from('SAAS_Agenda_Config').insert({ contaId: contaId, ...payload }).select('id').single();
+                if (error) { showError('Erro ao criar agenda.'); return; }
+                fecharModalNovaAgenda();
+                showSuccess('Agenda criada.');
+                await loadAgendas();
+                document.getElementById('agendaSelect').value = data.id;
+                currentAgendaId = data.id;
+                onAgendaChange();
+            }
+        });
+
+        function renderCalendar() {
+            const year = calDate.getFullYear();
+            const month = calDate.getMonth();
+            document.getElementById('calMonthYear').textContent = calDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+            const first = new Date(year, month, 1);
+            const last = new Date(year, month + 1, 0);
+            const lastDay = last.getDate();
+            const byDay = {};
+            (window._agendamentosDoMes || []).forEach(a => {
+                const dt = a.dataHora ? a.dataHora.split('T')[0] : '';
+                if (!byDay[dt]) byDay[dt] = 0;
+                byDay[dt]++;
+            });
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '<div class="calendar-header">Seg</div><div class="calendar-header">Ter</div><div class="calendar-header">Qua</div><div class="calendar-header">Qui</div><div class="calendar-header">Sex</div><div class="calendar-header">Sáb</div><div class="calendar-header">Dom</div>';
+            const segFirst = (first.getDay() + 6) % 7;
+            for (let i = 0; i < segFirst; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day empty-cell';
+                empty.innerHTML = '\u00a0';
+                grid.appendChild(empty);
+            }
+            for (let day = 1; day <= lastDay; day++) {
+                const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day';
+                if (byDay[key]) { cell.classList.add('has-events'); cell.innerHTML = `<span>${day}</span><span class="count">${byDay[key]}</span>`; } else cell.textContent = day;
+                cell.addEventListener('click', () => { abrirModalAgendamentoComData(key); });
+                grid.appendChild(cell);
+            }
+        }
+        function abrirModalAgendamentoComData(dataKey) {
+            document.querySelectorAll('.modal-tabs .tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.modal-tabs .tab[data-modal-tab="agendamento"]').classList.add('active');
+            document.querySelectorAll('.modal-tab-pane').forEach(p => p.classList.remove('active'));
+            document.getElementById('modalPaneAgendamento').classList.add('active');
+            document.getElementById('modalAgendamentoTitulo').textContent = 'Novo agendamento';
+            document.getElementById('modalAgendamentoId').value = '';
+            document.getElementById('modalDataDay').value = dataKey || '';
+            document.getElementById('modalData').value = dataKey || '';
+            document.getElementById('modalHora').value = '';
+            document.getElementById('modalTelefone').value = '';
+            document.getElementById('modalObservacoes').value = '';
+            document.getElementById('modalAgendamento').classList.add('active');
+        }
+        document.getElementById('calPrev').addEventListener('click', () => { calDate.setMonth(calDate.getMonth() - 1); loadAppointments(); renderCalendar(); });
+        document.getElementById('calNext').addEventListener('click', () => { calDate.setMonth(calDate.getMonth() + 1); loadAppointments(); renderCalendar(); });
+        function abrirModalNovoAgendamento() {
+            const today = new Date().toISOString().slice(0, 10);
+            document.querySelectorAll('.modal-tabs .tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.modal-tabs .tab[data-modal-tab="agendamento"]').classList.add('active');
+            document.querySelectorAll('.modal-tab-pane').forEach(p => p.classList.remove('active'));
+            document.getElementById('modalPaneAgendamento').classList.add('active');
+            document.getElementById('modalAgendamentoTitulo').textContent = 'Novo agendamento';
+            document.getElementById('modalAgendamentoId').value = '';
+            document.getElementById('modalDataDay').value = today;
+            document.getElementById('modalData').value = today;
+            document.getElementById('modalHora').value = '';
+            document.getElementById('modalTelefone').value = '';
+            document.getElementById('modalObservacoes').value = '';
+            document.getElementById('modalMsgTelefone').value = '';
+            document.getElementById('modalMsgMensagem').value = '';
+            document.getElementById('modalMsgDataHora').value = '';
+            document.getElementById('modalAgendamento').classList.add('active');
+        }
+        document.querySelectorAll('.modal-tabs .tab').forEach(t => t.addEventListener('click', function() {
+            const tab = this.getAttribute('data-modal-tab');
+            document.querySelectorAll('.modal-tabs .tab').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.modal-tab-pane').forEach(x => x.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(tab === 'agendamento' ? 'modalPaneAgendamento' : 'modalPaneMensagem').classList.add('active');
+            document.getElementById('modalAgendamentoTitulo').textContent = tab === 'agendamento' ? 'Novo agendamento' : 'Agendar mensagem';
+        }));
+        document.getElementById('btnNovoAgendamentoCal').addEventListener('click', abrirModalNovoAgendamento);
+        document.getElementById('btnNovoAgendamentoLista').addEventListener('click', abrirModalNovoAgendamento);
+
+        let appointments = [];
+        async function loadAppointments() {
+            if (!currentAgendaId || !contaId || !window.supabase) return;
+            const start = new Date(calDate.getFullYear(), calDate.getMonth(), 1);
+            const end = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 0);
+            const { data, error } = await window.supabase.from('SAAS_Agendamentos').select('id, dataHora, telefone, status, confirmacaoEnviada, observacoes').eq('idAgendaConfig', currentAgendaId).eq('contaId', contaId).gte('dataHora', start.toISOString()).lte('dataHora', end.toISOString().split('T')[0] + 'T23:59:59').order('dataHora');
+            if (error) return;
+            appointments = data || [];
+            window._agendamentosDoMes = appointments;
+            const tbody = document.getElementById('listaAgendamentos');
+            const all = await (async () => { const { data: d } = await window.supabase.from('SAAS_Agendamentos').select('id, dataHora, telefone, status, confirmacaoEnviada, observacoes').eq('idAgendaConfig', currentAgendaId).eq('contaId', contaId).order('dataHora', { ascending: false }); return d || []; })();
+            if (all.length === 0) {
+                tbody.innerHTML = '<tr class="tr-empty"><td colspan="5" style="text-align:center;padding:24px;color:#888;">Nao há agendamentos ainda.</td></tr>';
+            } else {
+                tbody.innerHTML = all.map(a => {
+                    const dt = a.dataHora ? new Date(a.dataHora).toLocaleString('pt-BR') : '-';
+                    const conf = a.confirmacaoEnviada ? 'Sim' : 'Nao';
+                    const statusOpts = ['agendado','confirmado','realizado','nao_compareceu','cancelado'].map(s => `<option value="${s}" ${(a.status||'')===s ? 'selected' : ''}>${s==='nao_compareceu'?'Nao compareceu':s==='realizado'?'Compareceu':s}</option>`).join('');
+                    return `<tr class="tr-agendamento" data-id="${a.id}"><td>${dt}</td><td>${a.telefone || '-'}</td><td><select class="status-select" data-id="${a.id}">${statusOpts}</select></td><td>${conf}</td><td><button type="button" class="btn btn-sm btn-secondary edit-agendamento" data-id="${a.id}">Editar</button> <button type="button" class="btn btn-sm btn-danger cancel-agendamento" data-id="${a.id}">Cancelar</button></td></tr>`;
+                }).join('');
+                tbody.querySelectorAll('.tr-agendamento').forEach(tr => {
+                    tr.addEventListener('click', (e) => {
+                        if (e.target.closest('button') || e.target.closest('select')) return;
+                        const id = tr.getAttribute('data-id');
+                        const rec = all.find(a => String(a.id) === String(id));
+                        if (!rec) return;
+                        abrirModalEditarAgendamentoItem(rec);
+                    });
+                });
+                tbody.querySelectorAll('.cancel-agendamento').forEach(btn => btn.addEventListener('click', async (e) => { e.stopPropagation(); if (!await showConfirmDialog('Cancelar este agendamento?')) return; const id = btn.getAttribute('data-id'); const { error } = await window.supabase.from('SAAS_Agendamentos').update({ status: 'cancelado' }).eq('id', id).eq('contaId', contaId); if (error) showError('Erro ao cancelar.'); else { showSuccess('Cancelado.'); loadAppointments(); renderCalendar(); } }));
+                tbody.querySelectorAll('.status-select').forEach(sel => sel.addEventListener('change', async (e) => { e.stopPropagation(); const id = sel.getAttribute('data-id'); const status = sel.value; const { error } = await window.supabase.from('SAAS_Agendamentos').update({ status }).eq('id', id).eq('contaId', contaId); if (error) showError('Erro ao atualizar status.'); else { showSuccess('Status atualizado.'); loadAppointments(); renderCalendar(); } }));
+                tbody.querySelectorAll('.edit-agendamento').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); const id = btn.getAttribute('data-id'); const rec = all.find(a => String(a.id) === String(id)); if (rec) abrirModalEditarAgendamentoItem(rec); }));
+            }
+            function abrirModalEditarAgendamentoItem(rec) {
+                document.querySelectorAll('.modal-tabs .tab').forEach(t => t.classList.remove('active'));
+                document.querySelector('.modal-tabs .tab[data-modal-tab="agendamento"]').classList.add('active');
+                document.querySelectorAll('.modal-tab-pane').forEach(p => p.classList.remove('active'));
+                document.getElementById('modalPaneAgendamento').classList.add('active');
+                document.getElementById('modalAgendamentoTitulo').textContent = 'Editar agendamento';
+                document.getElementById('modalAgendamentoId').value = rec.id;
+                const d = rec.dataHora ? new Date(rec.dataHora) : new Date();
+                document.getElementById('modalData').value = d.toISOString().slice(0, 10);
+                document.getElementById('modalHora').value = d.toTimeString().slice(0, 5);
+                document.getElementById('modalTelefone').value = rec.telefone || '';
+                document.getElementById('modalObservacoes').value = rec.observacoes || '';
+                document.getElementById('modalAgendamento').classList.add('active');
+            }
+            renderCalendar();
+        }
+
+        function fecharModalAgendamento() {
+            document.getElementById('modalAgendamento').classList.remove('active');
+            document.getElementById('modalAgendamentoTitulo').textContent = 'Novo agendamento';
+            document.getElementById('modalAgendamentoId').value = '';
+        }
+        document.getElementById('btnSalvarAgendamento').addEventListener('click', async () => {
+            const isMensagem = document.getElementById('modalPaneMensagem').classList.contains('active');
+            if (isMensagem) {
+                const telefone = document.getElementById('modalMsgTelefone').value.trim();
+                const mensagem = document.getElementById('modalMsgMensagem').value.trim();
+                const dataHora = document.getElementById('modalMsgDataHora').value;
+                const idConexao = document.getElementById('modalMsgIdConexao').value;
+                if (!telefone || !mensagem || !dataHora) { showError('Preencha telefone, mensagem e data/hora.'); return; }
+                const { error } = await window.supabase.from('SAAS_Agendamentos_Mensagens').insert({
+                    contaId: contaId,
+                    idConexao: idConexao ? parseInt(idConexao, 10) : null,
+                    telefone,
+                    mensagem,
+                    dataHora: new Date(dataHora).toISOString(),
+                    status: 'pendente'
+                });
+                if (error) { showError('Erro ao agendar mensagem.'); return; }
+                showSuccess('Mensagem agendada.');
+                document.getElementById('modalMsgTelefone').value = '';
+                document.getElementById('modalMsgMensagem').value = '';
+                document.getElementById('modalMsgDataHora').value = '';
+                fecharModalAgendamento();
+                return;
+            }
+            const editId = document.getElementById('modalAgendamentoId').value.trim();
+            const data = document.getElementById('modalData').value;
+            const hora = document.getElementById('modalHora').value;
+            const telefone = document.getElementById('modalTelefone').value.trim();
+            const observacoes = document.getElementById('modalObservacoes').value.trim();
+            if (!data || !hora) { showError('Informe data e hora.'); return; }
+            if (!telefone) { showError('Informe o telefone.'); return; }
+            const dataHora = new Date(data + 'T' + hora + ':00');
+            const duracao = (currentAgendaConfig && currentAgendaConfig.duracaoMinutos) || 30;
+            if (!editId) {
+                let livre = false;
+                try {
+                    const { data: slots, error } = await window.supabase.rpc('f_horarios_livres_agenda', { p_id_agenda: currentAgendaId, p_data_inicio: data });
+                    if (!error && slots && slots.length) {
+                        for (const s of slots) {
+                            const ini = new Date(s.data_hora_inicio);
+                            const fim = new Date(s.data_hora_fim);
+                            if (dataHora >= ini && dataHora < fim) { livre = true; break; }
+                        }
+                    }
+                } catch (e) { console.warn(e); }
+                if (!livre) { showError('Horário nao está livre ou nao está dentro do expediente. Verifique os horários disponíveis.'); return; }
+                const { error } = await window.supabase.from('SAAS_Agendamentos').insert({
+                    contaId: contaId,
+                    idAgendaConfig: currentAgendaId,
+                    idConexao: (currentAgendaConfig && currentAgendaConfig.idConexao) || null,
+                    telefone,
+                    dataHora: dataHora.toISOString(),
+                    duracaoMinutos: duracao,
+                    status: 'agendado',
+                    confirmacaoEnviada: false,
+                    observacoes: observacoes || null
+                });
+                if (error) { showError('Erro ao salvar agendamento.'); return; }
+                showSuccess('Agendamento criado.');
+            } else {
+                const { error } = await window.supabase.from('SAAS_Agendamentos').update({
+                    dataHora: dataHora.toISOString(),
+                    telefone,
+                    observacoes: observacoes || null,
+                    duracaoMinutos: duracao
+                }).eq('id', editId).eq('contaId', contaId);
+                if (error) { showError('Erro ao atualizar agendamento.'); return; }
+                showSuccess('Agendamento atualizado.');
+            }
+            fecharModalAgendamento();
+            loadAppointments();
+            renderCalendar();
+        });
+
+        document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', function() {
+            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(x => x.classList.remove('active'));
+            this.classList.add('active');
+            const id = 'pane' + this.getAttribute('data-tab').charAt(0).toUpperCase() + this.getAttribute('data-tab').slice(1);
+            document.getElementById(id).classList.add('active');
+        }));
+
+        async function init() {
+            try { await initializeAuth(); } catch (e) { if (e.message === 'STATUS_BLOQUEADO') return; throw e; }
+            await loadConexoes();
+            await loadAgendas();
+            const now = new Date();
+            const modalMsgDh = document.getElementById('modalMsgDataHora');
+            if (modalMsgDh) modalMsgDh.min = now.toISOString().slice(0, 16);
+        }
+        async function verificarMostrarMenuAdmin() {
+            const el = document.getElementById('menu-item-admin');
+            if (!el || !window.supabase) return;
+            try {
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) return;
+                const { data } = await window.supabase.from('SAAS_Usuarios').select('super_admin').eq('auth_user_id', user.id).limit(1);
+                if (data && data.length > 0 && data[0].super_admin === true) {
+                    el.style.display = '';
+                }
+            } catch (e) { console.warn('Erro ao verificar super_admin:', e); }
+        }
+
+        function normalizeMenuOcultarId(id) {
+            const raw = String(id || '').trim().toLowerCase();
+            if (!raw) return '';
+            const aliasMap = {
+                conexoes: 'conexoes',
+                configuracoes: 'configuracoes',
+                'agentes ia': 'agentes-ia',
+                agentes_ia: 'agentes-ia',
+                agentesia: 'agentes-ia'
+            };
+            return aliasMap[raw] || raw;
+        }
+
+        function applyMenuOcultarClasses(ids) {
+            if (!Array.isArray(ids)) return;
+            const normalizedIds = [...new Set(ids.map(normalizeMenuOcultarId).filter(Boolean))];
+            normalizedIds.forEach(id => document.body.classList.add('menu-oculta-' + id));
+        }
+
+        async function initMenuOcultar() {
+            const CACHE_KEY = 'menuOcultarCache';
+            const TTL_MS = 30 * 60 * 1000;
+            const cached = typeof getCookie === 'function' ? getCookie(CACHE_KEY) : null;
+            if (cached) {
+                try {
+                    const obj = JSON.parse(decodeURIComponent(cached));
+                    if (obj && Array.isArray(obj.arr) && obj.exp && Date.now() < obj.exp) {
+                        applyMenuOcultarClasses(obj.arr);
+                        return;
+                    }
+                } catch (e) { /* cache inválido */ }
+            }
+            if (!window.supabase) return;
+            try {
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) return;
+                const { data: usuario } = await window.supabase.from('SAAS_Usuarios').select('contaId').eq('auth_user_id', user.id).limit(1).maybeSingle();
+                if (!usuario?.contaId) return;
+                const { data: conta } = await window.supabase.from('SAAS_Contas').select('plano').eq('id', usuario.contaId).limit(1).maybeSingle();
+                if (!conta?.plano) return;
+                const { data: plano } = await window.supabase.from('SAAS_Planos').select('menu_ocultar').eq('id', conta.plano).limit(1).maybeSingle();
+                const arr = Array.isArray(plano?.menu_ocultar) ? plano.menu_ocultar : [];
+                const arrNormalized = [...new Set(arr.map(normalizeMenuOcultarId).filter(Boolean))];
+                applyMenuOcultarClasses(arrNormalized);
+                if (typeof setCookie === 'function') setCookie(CACHE_KEY, encodeURIComponent(JSON.stringify({arr: arrNormalized, exp: Date.now() + TTL_MS})), 1/48);
+            } catch (e) { console.warn('initMenuOcultar:', e); }
+        }
+        function clearMenuOcultarCache() {
+            document.cookie = 'menuOcultarCache=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarVersao();
+            initDarkMode();
+            initMenuOcultar();
+            verificarMostrarMenuAdmin();
+            init();
+        });
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar && overlay) {
+                if (sidebar.classList.contains('mobile-open')) { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
+                else { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+            }
+        }
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.remove('mobile-open');
+            if (overlay) overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        (function() {
+            var sidebarCollapseTimer = null;
+            var SIDEBAR_EDGE = 70;
+            var SIDEBAR_EXPANDED_WIDTH = 250;
+            var COLLAPSE_DELAY_MS = 120;
+            document.addEventListener('mousemove', function(e) {
+                if (window.matchMedia('(max-width: 768px)').matches) return;
+                var sidebar = document.getElementById('sidebar');
+                if (!sidebar || sidebar.classList.contains('mobile-open')) return;
+                var x = e.clientX;
+                if (x < SIDEBAR_EDGE) {
+                    if (sidebarCollapseTimer) { clearTimeout(sidebarCollapseTimer); sidebarCollapseTimer = null; }
+                    sidebar.classList.add('sidebar-expanded');
+                } else if (x > SIDEBAR_EXPANDED_WIDTH) {
+                    if (sidebarCollapseTimer) return;
+                    sidebarCollapseTimer = setTimeout(function() {
+                        sidebar.classList.remove('sidebar-expanded');
+                        sidebarCollapseTimer = null;
+                    }, COLLAPSE_DELAY_MS);
+                } else {
+                    if (sidebarCollapseTimer) { clearTimeout(sidebarCollapseTimer); sidebarCollapseTimer = null; }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
