@@ -12969,14 +12969,33 @@
             item[campo] = valor;
         }
 
-        function followupOnMidia(pi, ii, input) {
+        async function followupOnMidia(pi, ii, input) {
             const item = followupGetPasso(pi) && followupGetPasso(pi).itens[ii];
             const file = input.files && input.files[0];
             if (!item || !file) return;
             item.nome = file.name;
             item.mime = file.type;
             item._arquivo = file;
-            item.url = URL.createObjectURL(file);
+            item.url = '';
+            item._uploading = true;
+            renderFollowupPassos();
+            try {
+                const uploaded = await uploadArquivoParaWebhookMedia(file);
+                if (followupGetPasso(pi) && followupGetPasso(pi).itens[ii] === item) {
+                    item.url = uploaded.url;
+                    item.nome = uploaded.name || item.nome;
+                    item.mime = uploaded.type || item.mime;
+                    item._uploading = false;
+                    delete item._arquivo;
+                }
+            } catch (err) {
+                console.error('Follow-up: falha no upload da mídia', err);
+                if (followupGetPasso(pi) && followupGetPasso(pi).itens[ii] === item) {
+                    item.url = '';
+                    item._uploading = false;
+                }
+                showToast(err.message || 'Falha ao enviar o arquivo do follow-up.', 'error');
+            }
             renderFollowupPassos();
         }
 
@@ -12988,7 +13007,7 @@
                 body = '<label class="wz-followup-file" for="' + fileId + '">' +
                     '<input type="file" id="' + fileId + '" accept="image/*,audio/*,video/*,.pdf" onchange="followupOnMidia(' + pi + ',' + ii + ',this)">' +
                     '<span class="wz-followup-file-btn"><i class="fa-solid fa-paperclip"></i> ' + (item.nome ? 'Trocar arquivo' : 'Escolher arquivo') + '</span>' +
-                    '<span class="wz-followup-file-name">' + (item.nome ? escapeHtml(item.nome) : 'Nenhum arquivo escolhido') + '</span>' +
+                    '<span class="wz-followup-file-name">' + (item._uploading ? 'Enviando arquivo…' : (item.nome ? escapeHtml(item.nome) : 'Nenhum arquivo escolhido')) + '</span>' +
                     '</label>';
             } else {
                 body = '<textarea class="notify-textarea" rows="2" placeholder="Texto do follow-up" oninput="followupSetItemCampo(' + pi + ',' + ii + ',\'texto\',this.value)">' + escapeHtml(item.texto || '') + '</textarea>';
@@ -17649,6 +17668,15 @@
                 return;
             }
             if (!validarFerramentasAtivas()) {
+                return;
+            }
+            const midiaFollowupPendente = (agenteFollowup && agenteFollowup.passos || []).some(function (p) {
+                return (p.itens || []).some(function (it) {
+                    return it && it.tipo === 'midia' && (it._uploading || (it.url && String(it.url).indexOf('blob:') === 0));
+                });
+            });
+            if (midiaFollowupPendente) {
+                showToast('Aguarde o upload da mídia do follow-up (ou escolha o arquivo de novo).', 'info');
                 return;
             }
 
