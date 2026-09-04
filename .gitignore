@@ -22,8 +22,11 @@ AGENTS.md
 CLAUDE.md
 *lovable*
 
-# Build
-dist/
-dist-ssr/
-*.local
-.vite/
+# Docs e roteiros locais
+CHAT_SETUP.md
+COPY_LANDING_PAGE_HUBLABEL.md
+PLANO_EXECUCAO_HUBLABEL.md
+README.md
+ROTEIRO_VSL_HUBLABEL.md
+ROTEIRO_VSL_HUBLABEL_V2.md
+workflows/
